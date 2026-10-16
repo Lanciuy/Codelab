@@ -1,0 +1,6 @@
+$kind: http-request
+name: Current User
+order: 4000
+method: GET
+url: '{{base_url}}/auth/me'
+headers: []

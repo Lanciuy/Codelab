@@ -1,0 +1,6 @@
+$kind: http-request
+name: Borrow Book
+order: 1000
+method: POST
+url: '{{base_url}}/borrowings'
+headers: []

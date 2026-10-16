@@ -60,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.querySelector("#contact-name");
   const emailInput = document.querySelector("#contact-email");
   const messageInput = document.querySelector("#contact-message");
-  const formStatus = document.querySelector("#form-status");
+  const formStatus = document.querySelector("#form-status") || document.querySelector("#form-feedback");
 
   if (contactForm) {
     /**

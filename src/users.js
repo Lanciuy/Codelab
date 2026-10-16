@@ -226,6 +226,10 @@ if (searchInput) {
 // Tombol coba lagi (Retry) jika terjadi error state
 if (retryBtn) {
   retryBtn.addEventListener("click", () => {
+    // Jika sedang dalam simulasi parameter URL ?fail=1, bersihkan query agar retry memulihkan data normal
+    if (window.location.search.includes("fail=1")) {
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
     getUsers();
   });
 }

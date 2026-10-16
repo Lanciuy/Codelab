@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const nameInput = document.querySelector("#contact-name");
   const emailInput = document.querySelector("#contact-email");
   const messageInput = document.querySelector("#contact-message");
-  const formFeedback = document.querySelector("#form-feedback");
+  const formFeedback = document.querySelector("#form-status") || document.querySelector("#form-feedback");
 
   // Helper elements untuk error message per field
   const nameError = document.querySelector("#name-error");

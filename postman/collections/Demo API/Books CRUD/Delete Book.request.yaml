@@ -1,0 +1,9 @@
+$kind: http-request
+name: Delete Book
+order: 3000
+method: DELETE
+url: '{{base_url}}/admin/books/:id'
+headers: []
+pathVariables:
+  - key: id
+    value: ''

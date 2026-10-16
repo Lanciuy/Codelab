@@ -1,0 +1,9 @@
+$kind: http-request
+name: Return Book
+order: 2000
+method: PATCH
+url: '{{base_url}}/borrowings/:id/return'
+headers: []
+pathVariables:
+  - key: id
+    value: ''

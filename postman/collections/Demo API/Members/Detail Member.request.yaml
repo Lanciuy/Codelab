@@ -1,0 +1,9 @@
+$kind: http-request
+name: Detail Member
+order: 2000
+method: GET
+url: '{{base_url}}/members/:id'
+headers: []
+pathVariables:
+  - key: id
+    value: ''

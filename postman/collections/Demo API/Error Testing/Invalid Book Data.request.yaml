@@ -1,0 +1,6 @@
+$kind: http-request
+name: Invalid Book Data
+order: 2000
+method: POST
+url: '{{base_url}}/admin/books'
+headers: []

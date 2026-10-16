@@ -1,0 +1,6 @@
+$kind: http-request
+name: Borrow Unavailable Book
+order: 3000
+method: POST
+url: '{{base_url}}/borrowings'
+headers: []

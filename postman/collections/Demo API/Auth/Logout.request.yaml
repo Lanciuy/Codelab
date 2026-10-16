@@ -1,0 +1,6 @@
+$kind: http-request
+name: Logout
+order: 3000
+method: POST
+url: '{{base_url}}/auth/logout'
+headers: []

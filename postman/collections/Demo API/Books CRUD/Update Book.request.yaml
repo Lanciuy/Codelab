@@ -1,0 +1,9 @@
+$kind: http-request
+name: Update Book
+order: 2000
+method: PATCH
+url: '{{base_url}}/admin/books/:id'
+headers: []
+pathVariables:
+  - key: id
+    value: ''
