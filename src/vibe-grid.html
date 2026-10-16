@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FlipPlay - The Vibe Grid | Modul 2 Web</title>
+  <link href="./output.css" rel="stylesheet" />
+</head>
+<body class="bg-brand-bg text-gray-800 font-sans antialiased selection:bg-brand-accent selection:text-gray-900 min-h-screen flex flex-col">
+
+  <!-- NAVBAR -->
+  <header class="bg-brand-primary text-white px-6 py-4 shadow-md sticky top-0 z-40">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
+      <!-- Brand Logo -->
+      <a href="./index.html" class="flex items-center gap-2 group">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-brand-accent text-gray-900 font-black text-lg shadow-sm group-hover:scale-105 transition-transform">FP</span>
+        <div>
+          <h1 class="font-bold text-xl text-brand-accent tracking-wide leading-tight group-hover:text-cyan-300 transition-colors">FlipPlay</h1>
+          <p class="text-[10px] text-blue-200 uppercase tracking-widest font-mono">The Vibe Grid</p>
+        </div>
+      </a>
+
+      <!-- Mobile Hamburger Button -->
+      <button 
+        id="mobile-nav-toggle" 
+        type="button" 
+        class="md:hidden text-white hover:text-brand-accent focus:outline-none focus:ring-2 focus:ring-brand-accent rounded-lg p-2 transition-colors"
+        aria-label="Buka Navigasi"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Desktop Nav & Actions -->
+      <div id="mobile-nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 items-start md:items-center gap-4 md:gap-6 font-medium text-sm border-t md:border-none border-blue-800 pt-4 md:pt-0">
+        <a href="./index.html" class="hover:text-brand-accent transition duration-200 flex items-center gap-1.5">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+          </svg>
+          <span>Landing Page (Modul 1)</span>
+        </a>
+        <a href="./vibe-grid.html" class="text-brand-accent font-bold py-1 border-b-2 border-brand-accent">
+          The Vibe Grid (Modul 2)
+        </a>
+        <button 
+          id="source-toggle-btn" 
+          type="button" 
+          class="bg-white/10 hover:bg-white/20 text-xs font-semibold px-3 py-1.5 rounded-lg border border-white/20 transition flex items-center gap-1.5"
+          title="Alihkan sumber data antara REST API publik dan Data Cadangan Lokal"
+        >
+          <svg class="w-3.5 h-3.5 text-cyan-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path>
+          </svg>
+          <span>Ganti Sumber Data</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <main class="grow max-w-7xl w-full mx-auto px-4 sm:px-6 py-8">
+    
+    <!-- HERO / TITLE & STATS -->
+    <section class="bg-linear-to-r from-brand-primary to-blue-900 text-white rounded-3xl p-6 sm:p-10 mb-8 shadow-xl relative overflow-hidden">
+      <div class="relative z-10 max-w-3xl">
+        <div class="flex items-center gap-3 mb-3 flex-wrap">
+          <span class="text-xs uppercase font-mono tracking-widest bg-brand-accent/20 text-cyan-300 px-3 py-1 rounded-full border border-cyan-400/30">
+            FlipPlay Media Explorer
+          </span>
+          <span id="current-source-badge" class="text-xs font-semibold px-2.5 py-1 rounded-full bg-blue-100 text-brand-primary">
+            Jikan Public REST API
+          </span>
+        </div>
+
+        <h1 class="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3">
+          The Vibe Grid
+        </h1>
+        <p class="text-blue-100 text-sm sm:text-base leading-relaxed mb-6 max-w-2xl">
+          Eksplorasi media interaktif dengan kemampuan <strong>Unified Real-time Search</strong> dan filter <strong>Aura-Based Discovery</strong> yang dikonsumsi langsung dari endpoint REST API publik.
+        </p>
+
+        <!-- Dynamic Statistics Bar (Calculated via Array.prototype.reduce) -->
+        <div class="grid grid-cols-3 gap-3 sm:gap-4 max-w-md bg-white/10 backdrop-blur-md rounded-2xl p-4 border border-white/15">
+          <div class="text-center">
+            <span id="stat-count" class="block text-xl sm:text-2xl font-black text-white">0</span>
+            <span class="text-[11px] text-blue-200 uppercase font-semibold">Tampil</span>
+          </div>
+          <div class="text-center border-x border-white/20">
+            <span id="stat-avg-score" class="block text-xl sm:text-2xl font-black text-amber-300">0.00</span>
+            <span class="text-[11px] text-blue-200 uppercase font-semibold">Rata-rata Skor</span>
+          </div>
+          <div class="text-center">
+            <span id="stat-episodes" class="block text-xl sm:text-2xl font-black text-white">0</span>
+            <span class="text-[11px] text-blue-200 uppercase font-semibold">Total Episode</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTROLS TOOLBAR (Unified Search, Aura Filters, Sorting) -->
+    <section class="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 mb-8 space-y-5">
+      <!-- Search & Sort Row -->
+      <div class="flex flex-col md:flex-row gap-4 items-stretch md:items-center justify-between">
+        <!-- Unified Real-time Search Input (Event Handling: input) -->
+        <div class="relative grow max-w-xl">
+          <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-gray-400">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+            </svg>
+          </div>
+          <input 
+            id="search-input" 
+            type="search" 
+            placeholder="Unified Search: ketik judul anime secara real-time (contoh: Frieren, Titan, Naruto)..." 
+            class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-brand-secondary focus:border-transparent transition duration-200 shadow-sm"
+            autocomplete="off"
+          />
+        </div>
+
+        <!-- Sort Select (Event Handling: change) -->
+        <div class="flex items-center gap-2 shrink-0">
+          <label for="sort-select" class="text-xs font-bold text-gray-500 uppercase tracking-wider">Urutkan:</label>
+          <select 
+            id="sort-select" 
+            class="bg-white border border-gray-200 rounded-xl px-3 py-2.5 text-sm font-semibold text-gray-700 focus:outline-none focus:ring-2 focus:ring-brand-secondary cursor-pointer shadow-sm"
+          >
+            <option value="default">Default API</option>
+            <option value="score-desc">Skor Tertinggi &darr;</option>
+            <option value="episodes-desc">Episode Terbanyak &darr;</option>
+            <option value="title-asc">Judul A - Z &uarr;</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Aura-Based Discovery Row -->
+      <div>
+        <p class="text-xs font-bold uppercase tracking-wider text-gray-400 mb-2.5">Aura-Based Discovery (Pilih Vibe):</p>
+        <div id="aura-buttons-container" class="flex flex-wrap gap-2">
+          <!-- Tombol Aura dibuat secara dinamis dari JS (AURA_CONFIGS) -->
+        </div>
+      </div>
+    </section>
+
+    <!-- LOADING STATE INDICATOR -->
+    <div id="loading-state" class="py-4 text-center">
+      <div class="inline-flex items-center gap-3 bg-white px-5 py-2.5 rounded-full shadow-sm border border-gray-200 text-sm font-semibold text-brand-primary">
+        <svg class="animate-spin -ml-1 mr-1 h-4 w-4 text-brand-secondary" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
+        </svg>
+        <span>Mengambil data dari REST API... Mohon tunggu</span>
+      </div>
+    </div>
+
+    <!-- ERROR STATE CONTAINER (Bab 9.3 Penanganan Error) -->
+    <div id="error-state" class="hidden my-8 p-6 sm:p-8 bg-red-50 border-2 border-red-200 rounded-2xl text-center max-w-xl mx-auto shadow-sm">
+      <div class="w-12 h-12 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto mb-3">
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-red-900 mb-1">Gagal Memuat Data</h3>
+      <p id="error-message" class="text-sm text-red-700 mb-6 leading-relaxed">
+        Terjadi kendala saat melakukan permintaan HTTP ke endpoint REST API.
+      </p>
+      <div class="flex flex-wrap items-center justify-center gap-3">
+        <button 
+          id="retry-btn" 
+          type="button" 
+          class="bg-red-600 hover:bg-red-700 text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm shadow-md transition"
+        >
+          Coba Lagi (Retry)
+        </button>
+        <button 
+          id="fallback-btn" 
+          type="button" 
+          class="bg-white hover:bg-gray-100 text-gray-800 font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm border border-gray-300 shadow-sm transition"
+        >
+          Gunakan Data Cadangan Lokal
+        </button>
+      </div>
+    </div>
+
+    <!-- EMPTY SEARCH STATE -->
+    <div id="empty-state" class="hidden my-12 text-center py-12 px-6 bg-white rounded-2xl border border-dashed border-gray-200 max-w-lg mx-auto">
+      <div class="w-16 h-16 rounded-full bg-slate-100 text-slate-400 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+        </svg>
+      </div>
+      <h3 class="text-lg font-bold text-gray-800 mb-1">Tidak Ada Media Ditemukan</h3>
+      <p class="text-sm text-gray-500 mb-5 leading-relaxed">
+        Tidak ditemukan anime yang cocok dengan kata kunci pencarian atau kombinasi filter Aura yang dipilih.
+      </p>
+      <button 
+        id="empty-reset-btn" 
+        type="button" 
+        class="bg-brand-secondary hover:bg-brand-primary text-white font-bold px-5 py-2.5 rounded-xl text-xs sm:text-sm transition shadow-sm"
+      >
+        Reset Filter &amp; Pencarian
+      </button>
+    </div>
+
+    <!-- ANIME CARDS GRID CONTAINER -->
+    <div id="anime-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+      <!-- Diisi secara dinamis melalui UI.js menggunakan Template Literals -->
+    </div>
+
+  </main>
+
+  <!-- MODAL CONTAINER (Detail View) -->
+  <div id="modal-container" class="hidden"></div>
+
+  <!-- FOOTER -->
+  <footer class="bg-brand-primary text-white text-center py-6 text-sm border-t border-blue-900 mt-12">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>&copy; 2026 FlipPlay - The Vibe Grid | Pemrograman Web Modul 2</p>
+      <div class="flex gap-4 text-xs text-blue-200">
+        <a href="./index.html" class="hover:text-brand-accent">Landing Page</a>
+        <span>&bull;</span>
+        <a href="./vibe-grid.html" class="hover:text-brand-accent">The Vibe Grid</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script Module utama Modul 2 -->
+  <script type="module" src="./js/vibe-grid.js"></script>
+</body>
+</html>
