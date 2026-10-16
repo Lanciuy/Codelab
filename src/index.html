@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Codelab Modul 1 - Pemrograman Web</title>
+  <link href="./output.css" rel="stylesheet" />
+</head>
+<body class="bg-brand-bg text-gray-800 font-sans">
+
+  <!-- NAVBAR -->
+  <header class="bg-brand-primary text-white px-6 py-4 shadow-md sticky top-0 z-50">
+    <nav class="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
+      <h1 class="font-bold text-xl text-brand-accent tracking-wide">MyWebsite</h1>
+
+      <!-- Tombol Hamburger Mobile (Event Handling: click) -->
+      <button 
+        id="navbar-toggle" 
+        type="button" 
+        class="md:hidden text-white hover:text-brand-accent focus:outline-none p-1 rounded transition duration-200"
+        aria-label="Toggle Menu"
+      >
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        </svg>
+      </button>
+
+      <!-- Menu Navigasi (Desktop & Mobile Dropdown via classList.toggle) -->
+      <ul id="nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 gap-4 md:gap-6 font-medium text-sm md:text-base border-t md:border-none border-blue-800 pt-4 md:pt-0">
+        <li><a href="#" class="hover:text-brand-accent transition duration-200">Home</a></li>
+        <li><a href="#about" class="hover:text-brand-accent transition duration-200">About</a></li>
+        <li><a href="#cards" class="hover:text-brand-accent transition duration-200">Services</a></li>
+        <li><a href="#contact" class="hover:text-brand-accent transition duration-200">Contact</a></li>
+        <li><a href="./users.html" class="text-brand-accent hover:underline font-semibold transition duration-200">Data API</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="text-center py-20 px-6 bg-gradient-to-b from-brand-primary to-brand-secondary text-white">
+      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
+        Learn Tailwind CSS
+      </h1>
+      <p class="text-blue-100 max-w-xl mx-auto mb-6 text-base md:text-lg">
+        Create a website easily using modern HTML5 semantics and utility-first CSS framework.
+      </p>
+      <button class="bg-brand-accent hover:bg-cyan-400 text-gray-900 font-semibold px-6 py-2.5 rounded-lg shadow-md transition duration-300">
+        Start now
+      </button>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section id="about" class="px-6 py-12 max-w-4xl mx-auto text-center">
+      <h2 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4">About Us</h2>
+      <p class="text-gray-600 leading-relaxed">
+        We provide modern web learning using Tailwind CSS.
+      </p>
+    </section>
+
+    <!-- CARD SECTION  -->
+    <section id="cards" class="max-w-7xl mx-auto px-6 py-10">
+      <h2 class="text-2xl md:text-3xl font-bold text-center text-brand-primary mb-8">Layanan Unggulan</h2>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- Card 1 -->
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
+          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc4Bh2e11Q1l_Ak7iXXMBqMPtIerJdT8m8DCMSRdin-trsR6avPlpu6lM&s=10" alt="Web Development" class="w-full h-48 object-cover" />
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-brand-primary mb-2">Web Development</h3>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">
+              Pengembangan situs web interaktif dengan arsitektur modern, performa tinggi, dan struktur HTML semantik.
+            </p>
+            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
+              Baca Selengkapnya &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 2 -->
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
+          <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80" alt="UI/UX Design" class="w-full h-48 object-cover" />
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-brand-primary mb-2">UI/UX Design</h3>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">
+              Perancangan antarmuka pengguna yang intuitif, menarik, serta mengutamakan pengalaman terbaik bagi pengguna.
+            </p>
+            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
+              Baca Selengkapnya &rarr;
+            </a>
+          </div>
+        </article>
+
+        <!-- Card 3 -->
+        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
+          <img src="https://media.geeksforgeeks.org/wp-content/uploads/20260109171547046619/responsive_web_design.webp" alt="Responsive Design" class="w-full h-48 object-cover" />
+          <div class="p-6 flex flex-col flex-grow">
+            <h3 class="text-xl font-bold text-brand-primary mb-2">Responsive Design</h3>
+            <p class="text-gray-600 text-sm mb-4 flex-grow">
+              Optimasi tampilan antarmuka agar fleksibel dan tampak sempurna di berbagai ukuran perangkat.
+            </p>
+            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
+              Baca Selengkapnya &rarr;
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <!-- FORM SECTION DENGAN VALIDASI JAVASCRIPT (Codelab Modul 2) -->
+    <section id="contact" class="px-6 py-10 bg-gray-100 mt-10">
+      <form id="contact-form" class="bg-white p-6 rounded-xl shadow max-w-md mx-auto space-y-4">
+        <h3 class="text-xl font-bold text-center text-brand-primary mb-4">Hubungi Kami</h3>
+        <div>
+          <label for="name-input" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
+          <input 
+            id="name-input" 
+            type="text" 
+            placeholder="Masukkan nama" 
+            class="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-brand-secondary transition duration-200" 
+          />
+        </div>
+        <p id="form-message" class="text-sm font-semibold hidden"></p>
+        <button type="submit" class="bg-brand-secondary hover:bg-brand-primary text-white px-4 py-2 rounded w-full font-medium transition duration-200">
+          Kirim
+        </button>
+      </form>
+    </section>
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-brand-primary text-white text-center py-4 text-sm">
+    <p>Copyright 2026</p>
+  </footer>
+
+  <!-- External JavaScript dengan defer sesuai materi Modul 2 Bab 1.1 Tabel 1.2 -->
+  <script src="./script.js" defer></script>
+</body>
+</html>
