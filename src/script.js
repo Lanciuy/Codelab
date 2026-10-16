@@ -1,14 +1,11 @@
 /**
  * @file script.js
- * @description Skrip interaksi vanilla JavaScript untuk Codelab Modul 2.
- * Menangani:
- * 1. Navbar Toggle (Mobile Menu) dengan ARIA accessibility & keyboard escape
- * 2. Validasi Form Kontak (Nama, Email format, Pesan) menggunakan validitas native
+ * @description Skrip interaksi vanilla JavaScript untuk halaman landing page Modul 1.
  */
 
 document.addEventListener("DOMContentLoaded", () => {
   // ========================================================
-  // 1. NAVBAR TOGGLE (A1: Mobile Responsive Navigation)
+  // 1. NAVBAR TOGGLE (Navigasi Responsif Mobile)
   // ========================================================
   const navbarToggle = document.querySelector("#navbar-toggle");
   const navMenu = document.querySelector("#nav-menu");
@@ -17,24 +14,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (navbarToggle && navMenu) {
     /**
-     * Membuka atau menutup menu navigasi mobile dan menyelaraskan state aksesibilitas.
-     * Menggunakan classList.toggle("hidden") sesuai materi Bab 5.2.
+     * Fungsi untuk membuka atau menutup menu navigasi di tampilan mobile.
      */
     const toggleMenu = () => {
       const isClosed = navMenu.classList.toggle("hidden");
       const isExpanded = !isClosed;
 
+      // Update atribut aksesibilitas ARIA
       navbarToggle.setAttribute("aria-expanded", String(isExpanded));
 
+      // Ganti tampilan ikon hamburger dan ikon silang (close)
       if (iconOpen && iconClose) {
         iconOpen.classList.toggle("hidden", isExpanded);
         iconClose.classList.toggle("hidden", !isExpanded);
       }
     };
 
+    // Event listener saat tombol hamburger menu diklik
     navbarToggle.addEventListener("click", toggleMenu);
 
-    // Menutup menu mobile saat tautan di dalamnya diklik
+    // Menutup menu mobile secara otomatis saat salah satu link navigasi diklik
     const navLinks = navMenu.querySelectorAll("a");
     navLinks.forEach((link) => {
       link.addEventListener("click", () => {
@@ -44,7 +43,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Menutup menu saat pengguna menekan tombol Escape untuk kenyamanan navigasi keyboard
+    // Menutup menu mobile saat pengguna menekan tombol keyboard Escape
     document.addEventListener("keydown", (event) => {
       if (event.key === "Escape" && !navMenu.classList.contains("hidden")) {
         toggleMenu();
@@ -54,7 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   // ========================================================
-  // 2. FORM VALIDATION (A2: Cek Kosong & A3: Format Tidak Sesuai)
+  // 2. VALIDASI FORMULIR KONTAK
   // ========================================================
   const contactForm = document.querySelector("#contact-form");
   const nameInput = document.querySelector("#contact-name");
@@ -64,12 +63,10 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (contactForm) {
     /**
-     * Helper untuk menampilkan pesan kesalahan pada field input tertentu.
-     * Memperbarui atribut aria-invalid untuk aksesibilitas screen reader.
-     * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} input Elemen input target
-     * @param {HTMLElement} errorElement Elemen penampung pesan error
-     * @param {string} message Teks pesan kesalahan
+     * Fungsi untuk menampilkan pesan error dan mengubah border input menjadi merah.
+     * @param {HTMLElement} input - Elemen form input target.
+     * @param {HTMLElement} errorElement - Elemen tempat menampilkan teks error.
+     * @param {string} message - Isi pesan peringatan error.
      */
     const setFieldError = (input, errorElement, message) => {
       if (!input || !errorElement) return;
@@ -81,10 +78,9 @@ document.addEventListener("DOMContentLoaded", () => {
     };
 
     /**
-     * Helper untuk membersihkan status kesalahan saat pengguna mengetik.
-     * 
-     * @param {HTMLInputElement|HTMLTextAreaElement} input Elemen input target
-     * @param {HTMLElement} errorElement Elemen penampung pesan error
+     * Fungsi untuk membersihkan pesan error saat pengguna mulai mengetik kembali.
+     * @param {HTMLElement} input - Elemen form input target.
+     * @param {HTMLElement} errorElement - Elemen tempat pesan error.
      */
     const clearFieldError = (input, errorElement) => {
       if (!input || !errorElement) return;
@@ -95,12 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
       errorElement.classList.add("hidden");
     };
 
-    // Referensi elemen error per field
+    // Elemen notifikasi error untuk masing-masing field input
     const nameError = document.querySelector("#name-error");
     const emailError = document.querySelector("#email-error");
     const messageError = document.querySelector("#message-error");
 
-    // Event 'input' real-time untuk menghapus pesan kesalahan secara langsung
+    // Hapus pesan error secara instan saat pengguna sedang mengetik
     if (nameInput) {
       nameInput.addEventListener("input", () => clearFieldError(nameInput, nameError));
     }
@@ -112,14 +108,15 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     /**
-     * Menangani submit form dengan validasi menyeluruh tanpa reload halaman.
+     * Fungsi validasi formulir kontak saat tombol kirim ditekan.
      */
     contactForm.addEventListener("submit", (event) => {
+      // Mencegah reload halaman secara default
       event.preventDefault();
 
       let hasError = false;
 
-      // 1. Validasi Nama: wajib diisi & minimal 3 karakter
+      // 1. Validasi nama: wajib diisi dan minimal 3 karakter
       const nameVal = nameInput ? nameInput.value.trim() : "";
       if (nameVal === "") {
         setFieldError(nameInput, nameError, "Nama lengkap wajib diisi.");
@@ -131,19 +128,19 @@ document.addEventListener("DOMContentLoaded", () => {
         clearFieldError(nameInput, nameError);
       }
 
-      // 2. Validasi Email: cek wajib isi dan validasi format menggunakan API native validity
+      // 2. Validasi email: wajib diisi dan format email harus valid
       const emailVal = emailInput ? emailInput.value.trim() : "";
       if (emailVal === "") {
         setFieldError(emailInput, emailError, "Alamat email wajib diisi.");
         hasError = true;
-      } else if (emailInput.validity.typeMismatch || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
+      } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(emailVal)) {
         setFieldError(emailInput, emailError, "Format email belum sesuai. Contoh: nama@domain.com");
         hasError = true;
       } else {
         clearFieldError(emailInput, emailError);
       }
 
-      // 3. Validasi Pesan: wajib diisi & minimal 5 karakter
+      // 3. Validasi pesan: wajib diisi dan minimal 5 karakter
       const msgVal = messageInput ? messageInput.value.trim() : "";
       if (msgVal === "") {
         setFieldError(messageInput, messageError, "Pesan pertanyaan wajib diisi.");
@@ -155,7 +152,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearFieldError(messageInput, messageError);
       }
 
-      // Jika ada field yang tidak valid, arahkan fokus ke field error pertama
+      // Hentikan proses jika ada field yang tidak valid
       if (hasError) {
         if (formStatus) {
           formStatus.className = "p-3.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 border border-red-200 block";
@@ -164,12 +161,13 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      // Seluruh field valid: tampilkan pesan sukses terkalibrasi dan reset form
+      // Tampilkan notifikasi sukses jika semua input sudah valid
       if (formStatus) {
         formStatus.className = "p-4 rounded-lg text-sm font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 block";
         formStatus.innerHTML = `Terima kasih, <strong>${nameVal}</strong>! Pesan Anda telah terkirim.`;
       }
 
+      // Bersihkan nilai input form setelah berhasil
       contactForm.reset();
     });
   }

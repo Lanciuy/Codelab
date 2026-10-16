@@ -1,15 +1,9 @@
 /**
  * @file users.js
- * @description Modul pengambilan dan rendering data dari Public REST API Anime (Studio Ghibli API) untuk Codelab Modul 2.
- * Mengimplementasikan:
- * 1. Fetch API method GET dengan async/await dan penanganan error try...catch (Bab 7 & 9)
- * 2. Pengecekan eksplisit HTTP response.ok (Bab 9.3)
- * 3. Loading state dan Error message interaktif dengan tombol coba lagi (Bab 9.1 & 9.3)
- * 4. Rendering data dalam bentuk Card visual responsif menggunakan Template Literal, Destructuring, dan Array map (Bab 3.2, 3.3, 4.2)
- * 5. Fitur Search real-time menggunakan Array filter() dan event input (Bab 4.2 & Bab 6)
+ * @description Modul interaksi data REST API Anime (Studio Ghibli API) untuk Codelab Modul 2.
  */
 
-// Seleksi elemen DOM berdasarkan ID sesuai modul
+// Seleksi elemen DOM berdasarkan ID
 const searchInput = document.querySelector("#search-input");
 const userList = document.querySelector("#user-list");
 const loadingContainer = document.querySelector("#loading-container");
@@ -19,15 +13,13 @@ const errorMessage = document.querySelector("#error-message");
 const retryBtn = document.querySelector("#retry-btn");
 const userCountBadge = document.querySelector("#user-count-badge");
 
-// Variabel penyimpan state data anime dari REST API
+// Menyimpan daftar data anime yang berhasil diambil dari API
 let animeData = [];
 
 /**
- * Sanitasi string teks untuk mencegah celah Cross-Site Scripting (XSS)
- * Sesuai materi Bab 9.1 Catatan Penting.
- * 
- * @param {string} text Teks mentah
- * @returns {string} Teks aman yang telah di-escape
+ * Fungsi untuk membersihkan teks dari karakter HTML berbahaya (mencegah celah XSS).
+ * @param {string} text - Teks mentah yang akan dibersihkan.
+ * @returns {string} Teks aman yang sudah di-escape.
  */
 const escapeHTML = (text) => {
   if (text === null || text === undefined) return "";
@@ -37,20 +29,18 @@ const escapeHTML = (text) => {
 };
 
 /**
- * Merender daftar film anime ke dalam format Card visual interaktif pada DOM.
- * Menggunakan Array Method map() dan Template Literal ${} sesuai Bab 4.2 & Bab 9.1 Gambar 9.3.
- * 
- * @param {Array<Object>} films Array of objects data anime dari Studio Ghibli API
+ * Fungsi untuk menampilkan daftar anime dalam bentuk kartu (card) pada halaman web.
+ * @param {Array<Object>} films - Kumpulan data film anime dari API.
  */
 const renderAnimeCards = (films) => {
   if (!userList) return;
 
-  // Perbarui indikator jumlah data yang sedang tampil
+  // Update label total data anime yang tampil
   if (userCountBadge) {
     userCountBadge.textContent = `${films.length} film anime`;
   }
 
-  // Tampilan ketika hasil pencarian tidak menemukan kecocokan
+  // Tampilan ketika hasil pencarian tidak ditemukan
   if (!films || films.length === 0) {
     userList.innerHTML = `
       <div class="col-span-full text-center py-14 px-6 bg-white rounded-2xl border border-dashed border-slate-300">
@@ -61,10 +51,9 @@ const renderAnimeCards = (films) => {
     return;
   }
 
-  // Konversi array anime menjadi elemen card HTML via map() + join("")
+  // Render setiap item film menjadi elemen HTML kartu
   userList.innerHTML = films
     .map((film) => {
-      // Destructuring properti objek film anime sesuai materi Bab 3.3
       const {
         id,
         title,
@@ -99,7 +88,7 @@ const renderAnimeCards = (films) => {
       return `
         <article class="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
           <div>
-            <!-- Poster Anime dengan Overlay Badges -->
+            <!-- Poster Anime -->
             <div class="relative aspect-3/4 overflow-hidden bg-slate-900">
               <img 
                 src="${posterUrl}" 
@@ -109,7 +98,7 @@ const renderAnimeCards = (films) => {
               />
               <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-40 transition-opacity"></div>
               
-              <!-- Badge Rating Rotten Tomatoes -->
+              <!-- Badge Skor Rating -->
               <div class="absolute top-3 right-3 flex items-center gap-1 bg-black/75 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold shadow-md">
                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
@@ -117,7 +106,7 @@ const renderAnimeCards = (films) => {
                 <span>${safeScore}</span>
               </div>
 
-              <!-- Badge Tahun Rilis & Durasi -->
+              <!-- Badge Tahun Rilis dan Durasi -->
               <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
                 <span class="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
                   ${safeYear}
@@ -130,7 +119,7 @@ const renderAnimeCards = (films) => {
 
             <!-- Konten Kartu -->
             <div class="p-5 flex flex-col grow">
-              <!-- Sutradara -->
+              <!-- Nama Sutradara -->
               <div class="flex items-center gap-1 text-xs text-brand-secondary font-semibold mb-1">
                 <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
@@ -138,24 +127,24 @@ const renderAnimeCards = (films) => {
                 <span class="line-clamp-1">${safeDirector}</span>
               </div>
 
-              <!-- Judul Utama -->
+              <!-- Judul Film -->
               <h3 class="font-bold text-slate-900 group-hover:text-brand-secondary transition-colors line-clamp-1 text-base mb-1" title="${safeTitle}">
                 ${safeTitle}
               </h3>
 
-              <!-- Judul Kanji & Romanisasi -->
+              <!-- Judul Asli Bahasa Jepang -->
               <p class="text-[11px] font-medium text-slate-400 line-clamp-1 mb-2">
                 ${safeKanji} ${safeRomanised ? `(${safeRomanised})` : ""}
               </p>
 
-              <!-- Sinopsis -->
+              <!-- Ringkasan Cerita -->
               <p class="text-xs text-slate-600 leading-relaxed grow line-clamp-3 mb-4">
                 ${safeDescription}
               </p>
             </div>
           </div>
 
-          <!-- Footer Kartu -->
+          <!-- Bagian Bawah Kartu -->
           <div class="px-5 pb-4 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
             <span class="text-brand-secondary font-semibold group-hover:underline inline-flex items-center gap-1">
               <span>Studio Ghibli</span>
@@ -170,11 +159,11 @@ const renderAnimeCards = (films) => {
 };
 
 /**
- * Mengambil data anime dari public REST API Studio Ghibli menggunakan Fetch API method GET (Bab 9).
- * Menangani loading state, error handling, dan mode demonstrasi kegagalan lewat URL '?fail=1'.
+ * Fungsi untuk mengambil data anime dari REST API publik menggunakan Fetch API (Method GET).
+ * Mengatur loading state saat proses berlangsung dan menampilkan error state jika gagal.
  */
 const getAnimeData = async () => {
-  // Evaluasi mode fail untuk pengujian visual penanganan error
+  // Mode simulasi error menggunakan query '?fail=1' di URL
   const urlParams = new URLSearchParams(window.location.search);
   const isFailMode = urlParams.get("fail") === "1";
   const apiEndpoint = isFailMode
@@ -182,31 +171,31 @@ const getAnimeData = async () => {
     : "https://ghibliapi.vercel.app/films";
 
   try {
-    // 1. Tampilkan state loading (spinner + skeleton loader) dan reset state error
+    // 1. Tampilkan indikator loading dan sembunyikan pesan error sebelumnya
     if (loadingContainer) loadingContainer.classList.remove("hidden");
     if (loadingMessage) loadingMessage.textContent = "Mengambil katalog film anime dari Studio Ghibli REST API...";
     if (errorContainer) errorContainer.classList.add("hidden");
     if (userList) userList.innerHTML = "";
 
-    // 2. Kirim permintaan HTTP GET via Fetch API (Bab 9.1 & 9.2)
+    // 2. Request data ke REST API menggunakan Fetch API
     const response = await fetch(apiEndpoint);
 
-    // 3. Pengecekan manual response.ok sesuai materi Bab 9.3 Gambar 9.7
+    // 3. Pastikan respon server berstatus sukses (HTTP 200-299)
     if (!response.ok) {
       throw new Error(`Data gagal dimuat dari server (HTTP status: ${response.status})`);
     }
 
-    // 4. Konversi response JSON (Bab 8.3)
+    // 4. Konversi hasil respon menjadi data JSON
     const payload = await response.json();
     animeData = Array.isArray(payload) ? payload : [];
 
-    // 5. Render data anime ke dalam kartu visual
+    // 5. Render data film anime ke tampilan kartu
     renderAnimeCards(animeData);
 
-    // Sembunyikan container loading setelah data berhasil diproses
+    // Sembunyikan indikator loading setelah data selesai dimuat
     if (loadingContainer) loadingContainer.classList.add("hidden");
   } catch (error) {
-    // 6. Tangani kegagalan jaringan atau HTTP error (Bab 9.3)
+    // 6. Tangani jika terjadi error koneksi atau HTTP gagal
     console.error("Gagal melakukan fetch data anime:", error);
 
     if (loadingContainer) loadingContainer.classList.add("hidden");
@@ -218,15 +207,13 @@ const getAnimeData = async () => {
   }
 };
 
-// ========================================================
-// EVENT LISTENERS
-// ========================================================
-
-// Event 'input' untuk Real-Time Search berdasarkan judul atau sutradara (Bab 4.2 & Bab 6)
+/**
+ * Event listener untuk input pencarian film anime secara real-time.
+ */
 if (searchInput) {
   searchInput.addEventListener("input", () => {
     const keyword = searchInput.value.toLowerCase().trim();
-    // Menggunakan Array Method filter() sesuai Bab 4.2 Tabel 4.1
+    // Filter data berdasarkan judul, nama jepang, sutradara, atau sinopsis
     const filteredAnime = animeData.filter((film) => {
       const title = film.title ? film.title.toLowerCase() : "";
       const kanji = film.original_title ? film.original_title.toLowerCase() : "";
@@ -245,10 +232,12 @@ if (searchInput) {
   });
 }
 
-// Tombol coba lagi (Retry) jika terjadi error state
+/**
+ * Event listener untuk tombol coba lagi (Retry) saat terjadi error state.
+ */
 if (retryBtn) {
   retryBtn.addEventListener("click", () => {
-    // Bersihkan query string ?fail=1 agar retry langsung memulihkan data normal
+    // Bersihkan parameter fail=1 jika sedang dalam mode uji coba error
     if (window.location.search.includes("fail=1")) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
@@ -256,7 +245,9 @@ if (retryBtn) {
   });
 }
 
-// Jalankan pengambilan data pertama kali saat DOM siap
+/**
+ * Jalankan pengambilan data secara otomatis saat struktur HTML selesai dimuat.
+ */
 document.addEventListener("DOMContentLoaded", () => {
   getAnimeData();
 });
