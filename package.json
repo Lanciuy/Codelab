@@ -3,7 +3,9 @@
   "version": "1.0.0",
   "scripts": {
     "build:css": "npx @tailwindcss/cli -i ./src/main.css -o ./src/output.css",
-    "watch:css": "npx @tailwindcss/cli -i ./src/main.css -o ./src/output.css --watch"
+    "watch:css": "npx @tailwindcss/cli -i ./src/main.css -o ./src/output.css --watch",
+    "test:api": "npx newman run postman/Codelab_Users_API.postman_collection.json -e postman/Modul2_Environment.postman_environment.json",
+    "test:demo": "npx newman run postman/Demo_API.postman_collection.json -e postman/Modul2_Environment.postman_environment.json"
   },
   "dependencies": {
     "@tailwindcss/cli": "^4.3.3",

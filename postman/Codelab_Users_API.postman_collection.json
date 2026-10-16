@@ -1,0 +1,104 @@
+{
+  "info": {
+    "_postman_id": "a82b9e11-7390-48e2-9b2f-2d6a50e93fa1",
+    "name": "Codelab Users API",
+    "description": "Koleksi pengujian endpoint Users REST API untuk Codelab Modul 2 Pemrograman Web.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET All Users (Digunakan di users.html)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        },
+        "description": "Mengambil seluruh array of objects pengguna untuk di-render ke kartu UI."
+      }
+    },
+    {
+      "name": "GET Single User by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/json" }
+        ],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Mengambil detail 1 user berdasarkan ID."
+      }
+    },
+    {
+      "name": "POST Create User",
+      "request": {
+        "method": "POST",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Christian Kusuma\",\n  \"username\": \"ckusuma\",\n  \"email\": \"ckusuma@umm.ac.id\",\n  \"phone\": \"0812-3456-7890\",\n  \"website\": \"informatika.umm.ac.id\",\n  \"company\": {\n    \"name\": \"Laboratorium Informatika UMM\"\n  },\n  \"address\": {\n    \"city\": \"Malang\"\n  }\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users",
+          "host": ["{{baseUrl}}"],
+          "path": ["users"]
+        },
+        "description": "Simulasi penambahan user baru via HTTP POST."
+      }
+    },
+    {
+      "name": "PUT Update User",
+      "request": {
+        "method": "PUT",
+        "header": [
+          { "key": "Content-Type", "value": "application/json" }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"name\": \"Christian Kusuma (Updated)\",\n  \"email\": \"ckusuma.new@umm.ac.id\"\n}"
+        },
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Penggantian seluruh data user menggunakan HTTP PUT."
+      }
+    },
+    {
+      "name": "DELETE User",
+      "request": {
+        "method": "DELETE",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/1",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "1"]
+        },
+        "description": "Penghapusan user berdasarkan ID menggunakan HTTP DELETE."
+      }
+    },
+    {
+      "name": "GET User 404 Not Found (Uji Penanganan Error)",
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{baseUrl}}/users/99999",
+          "host": ["{{baseUrl}}"],
+          "path": ["users", "99999"]
+        },
+        "description": "Menguji respons status HTTP 404 sesuai materi Bab 8.6 & 9.3."
+      }
+    }
+  ]
+}
