@@ -3,139 +3,367 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Codelab Modul 1 - Pemrograman Web</title>
+  <meta name="description" content="Codelab Modul 2 Praktikum Pemrograman Web - DOM Manipulation, Event Handling, dan Fetch API." />
+  <title>Codelab Modul 2 - Pemrograman Web</title>
+
+  <!-- Google Fonts: Geist & Geist Mono (Anti AI Slop Font Stack) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
   <link href="./output.css" rel="stylesheet" />
 </head>
-<body class="bg-brand-bg text-gray-800 font-sans">
+<body class="bg-paper text-ink font-sans antialiased min-h-screen flex flex-col">
+
+  <!-- ACCESSIBILITY: Skip to content -->
+  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-ink focus:text-paper focus:rounded-lg focus:shadow-lg focus:outline-none">
+    Lewati ke konten utama
+  </a>
 
   <!-- NAVBAR -->
-  <header class="bg-brand-primary text-white px-6 py-4 shadow-md sticky top-0 z-50">
+  <header class="bg-ink/95 text-paper px-6 py-4 shadow-[0_10px_30px_-15px_rgb(28_27_25/0.2)] sticky top-0 z-40 backdrop-blur-md">
     <nav class="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
-      <h1 class="font-bold text-xl text-brand-accent tracking-wide">MyWebsite</h1>
+      <!-- Brand Logo -->
+      <a href="./index.html" class="flex items-center gap-1.5 font-bold text-xl tracking-tight text-paper group">
+        <span>MyWebsite</span>
+        <span class="w-2 h-2 rounded-full bg-accent inline-block group-hover:scale-125 transition-transform"></span>
+      </a>
 
-      <!-- Tombol Hamburger Mobile (Event Handling: click) -->
+      <!-- Mobile Hamburger Button (A1: Event Handling click) -->
       <button 
         id="navbar-toggle" 
         type="button" 
-        class="md:hidden text-white hover:text-brand-accent focus:outline-none p-1 rounded transition duration-200"
-        aria-label="Toggle Menu"
+        class="md:hidden text-paper hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg p-1.5 transition-colors" 
+        aria-label="Toggle Menu Navigasi" 
+        aria-controls="nav-menu"
+        aria-expanded="false"
       >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
+        <!-- Icon Hamburger -->
+        <svg id="nav-icon-open" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+        </svg>
+        <!-- Icon Close -->
+        <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
 
-      <!-- Menu Navigasi (Desktop & Mobile Dropdown via classList.toggle) -->
-      <ul id="nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 gap-4 md:gap-6 font-medium text-sm md:text-base border-t md:border-none border-blue-800 pt-4 md:pt-0">
-        <li><a href="#" class="hover:text-brand-accent transition duration-200">Home</a></li>
-        <li><a href="#about" class="hover:text-brand-accent transition duration-200">About</a></li>
-        <li><a href="#cards" class="hover:text-brand-accent transition duration-200">Services</a></li>
-        <li><a href="#contact" class="hover:text-brand-accent transition duration-200">Contact</a></li>
-        <li><a href="./users.html" class="text-brand-accent hover:underline font-semibold transition duration-200">Data API</a></li>
+      <!-- Navigation Menu -->
+      <ul id="nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 items-start md:items-center gap-4 md:gap-8 font-medium text-sm border-t md:border-none border-line/20 pt-4 md:pt-0">
+        <li><a href="#main" class="text-paper hover:text-accent transition duration-200">Home</a></li>
+        <li><a href="#about" class="text-paper/80 hover:text-accent transition duration-200">About</a></li>
+        <li><a href="#cards" class="text-paper/80 hover:text-accent transition duration-200">Services</a></li>
+        <li><a href="#contact" class="text-paper/80 hover:text-accent transition duration-200">Contact</a></li>
+        <li>
+          <a 
+            href="./users.html" 
+            class="inline-flex items-center gap-1.5 bg-accent hover:bg-accent-hover text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg transition duration-200 shadow-sm active:scale-[0.98]"
+          >
+            <span>Data API</span>
+            <span class="font-mono text-[10px] bg-white/20 px-1 py-0.2 rounded">GET</span>
+          </a>
+        </li>
       </ul>
     </nav>
   </header>
 
-  <main>
-    <!-- HERO SECTION -->
-    <section class="text-center py-20 px-6 bg-gradient-to-b from-brand-primary to-brand-secondary text-white">
-      <h1 class="text-4xl md:text-5xl font-extrabold mb-4 tracking-tight">
-        Learn Tailwind CSS
-      </h1>
-      <p class="text-blue-100 max-w-xl mx-auto mb-6 text-base md:text-lg">
-        Create a website easily using modern HTML5 semantics and utility-first CSS framework.
-      </p>
-      <button class="bg-brand-accent hover:bg-cyan-400 text-gray-900 font-semibold px-6 py-2.5 rounded-lg shadow-md transition duration-300">
-        Start now
-      </button>
+  <main id="main" class="flex-grow">
+    <!-- HERO SECTION (Split Screen Layout - Anti Center Bias) -->
+    <section class="max-w-7xl mx-auto px-6 py-16 md:py-24">
+      <div class="grid grid-cols-1 lg:grid-cols-[1.1fr_0.9fr] gap-12 lg:gap-16 items-center">
+        <!-- Kolom Teks Kiri -->
+        <div class="space-y-6">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-line/50 border border-line text-xs font-mono text-muted">
+            <span class="w-2 h-2 rounded-full bg-accent animate-pulse"></span>
+            <span>Praktikum Pemrograman Web · Modul 2</span>
+          </div>
+
+          <h1 class="text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight leading-[1.08] text-ink text-balance">
+            Halaman statis yang kini merespons interaksi Anda.
+          </h1>
+
+          <p class="text-base md:text-lg text-muted max-w-[56ch] leading-relaxed">
+            Menambahkan manipulasi DOM, event listener pada menu mobile, validasi form di sisi peramban, serta integrasi Fetch API asynchronous langsung dari endpoint publik.
+          </p>
+
+          <div class="flex flex-wrap items-center gap-4 pt-2">
+            <a 
+              href="./users.html" 
+              class="bg-accent hover:bg-accent-hover text-white font-semibold text-sm px-6 py-3 rounded-xl shadow-[0_12px_24px_-10px_rgba(194,83,45,0.4)] hover:shadow-lg transition duration-200 active:scale-[0.98]"
+            >
+              Buka Halaman Data API
+            </a>
+            <a 
+              href="#contact" 
+              class="inline-flex items-center gap-1 text-sm font-semibold text-ink hover:text-accent transition duration-200 px-4 py-3"
+            >
+              <span>Uji Validasi Form</span>
+              <span aria-hidden="true">&darr;</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Kolom Visual Kanan -->
+        <div class="relative">
+          <div class="aspect-[4/3] rounded-[2rem] overflow-hidden shadow-[0_20px_50px_-20px_rgba(28,27,25,0.25)] border border-line bg-surface">
+            <img 
+              src="./assets/hero.jpg" 
+              alt="Meja kerja pengembang web minimalis dengan pencahayaan alami" 
+              class="w-full h-full object-cover" 
+              loading="eager"
+            />
+          </div>
+
+          <!-- Floating Code Badge (Material Depth) -->
+          <div class="hidden sm:block absolute -bottom-6 -left-6 bg-surface/95 backdrop-blur-md p-4 rounded-2xl shadow-xl border border-line max-w-xs text-xs font-mono text-ink">
+            <div class="flex items-center gap-1.5 text-muted text-[10px] pb-2 border-b border-line mb-2">
+              <span class="w-2 h-2 rounded-full bg-red-400"></span>
+              <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <span class="ml-auto">fetch-api.js</span>
+            </div>
+            <p class="text-muted"><span class="text-accent font-semibold">const</span> res = <span class="text-accent font-semibold">await</span> fetch(url);</p>
+            <p class="text-muted"><span class="text-accent font-semibold">if</span> (!res.ok) <span class="text-danger font-semibold">throw</span> Error();</p>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- ABOUT SECTION -->
-    <section id="about" class="px-6 py-12 max-w-4xl mx-auto text-center">
-      <h2 class="text-2xl md:text-3xl font-bold text-brand-primary mb-4">About Us</h2>
-      <p class="text-gray-600 leading-relaxed">
-        We provide modern web learning using Tailwind CSS.
-      </p>
+    <!-- ABOUT SECTION (Asymmetric 2-Column Layout) -->
+    <section id="about" class="border-t border-line/70 bg-surface/60 py-16 md:py-20 px-6">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-[1fr_1.8fr] gap-8 md:gap-16 items-start">
+          <div>
+            <span class="font-mono text-xs uppercase tracking-wider text-accent font-semibold block mb-2">01 / Latar Belakang</span>
+            <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-ink">
+              Tentang Praktikum
+            </h2>
+          </div>
+
+          <div class="space-y-6">
+            <p class="text-muted text-base leading-relaxed max-w-[62ch]">
+              Laboratorium Informatika Universitas Muhammadiyah Malang menghadirkan modul pembelajaran berbasis kompetensi web modern. Modul ini membimbing transisi dari tata letak statis menuju aplikasi web yang dinamis, modular, dan terhubung dengan layanan web eksternal.
+            </p>
+
+            <!-- Mini Fact Counter (Monospace numbers) -->
+            <div class="grid grid-cols-3 gap-4 pt-4 border-t border-line">
+              <div>
+                <span class="font-mono text-2xl font-bold text-ink block">01</span>
+                <span class="text-xs text-muted">HTML5 Semantik</span>
+              </div>
+              <div>
+                <span class="font-mono text-2xl font-bold text-ink block">02</span>
+                <span class="text-xs text-muted">Tailwind Utility</span>
+              </div>
+              <div>
+                <span class="font-mono text-2xl font-bold text-ink block">03</span>
+                <span class="text-xs text-muted">DOM &amp; Fetch API</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </section>
 
-    <!-- CARD SECTION  -->
-    <section id="cards" class="max-w-7xl mx-auto px-6 py-10">
-      <h2 class="text-2xl md:text-3xl font-bold text-center text-brand-primary mb-8">Layanan Unggulan</h2>
-      
-      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+    <!-- SERVICES SECTION (Bento Grid Layout - Anti Generic Cards) -->
+    <section id="cards" class="py-16 md:py-24 px-6 max-w-7xl mx-auto">
+      <div class="mb-12 max-w-xl">
+        <span class="font-mono text-xs uppercase tracking-wider text-accent font-semibold block mb-2">02 / Eksplorasi</span>
+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-ink">
+          Layanan Unggulan
+        </h2>
+        <p class="text-muted text-sm mt-1">Studi kasus dan fokus pengerjaan antarmuka pada praktikum pemrograman web.</p>
+      </div>
+
+      <!-- Bento Grid -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
         
-        <!-- Card 1 -->
-        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
-          <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTc4Bh2e11Q1l_Ak7iXXMBqMPtIerJdT8m8DCMSRdin-trsR6avPlpu6lM&s=10" alt="Web Development" class="w-full h-48 object-cover" />
-          <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-xl font-bold text-brand-primary mb-2">Web Development</h3>
-            <p class="text-gray-600 text-sm mb-4 flex-grow">
-              Pengembangan situs web interaktif dengan arsitektur modern, performa tinggi, dan struktur HTML semantik.
-            </p>
-            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
-              Baca Selengkapnya &rarr;
-            </a>
+        <!-- Large Tile (Web Development) -->
+        <article class="md:col-span-2 group bg-surface rounded-3xl overflow-hidden border border-line shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div class="aspect-[16/9] md:aspect-[21/9] overflow-hidden bg-line/20">
+            <img 
+              src="./assets/webdev.jpg" 
+              alt="Pengembangan web front-end modern" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+              loading="lazy"
+            />
+          </div>
+          <div class="p-6 md:p-8 flex flex-col justify-between flex-grow">
+            <div>
+              <div class="flex items-center gap-2 mb-2 font-mono text-xs text-muted">
+                <span>Frontend Logic</span>
+                <span>&bull;</span>
+                <span>Vanilla ES6+</span>
+              </div>
+              <h3 class="text-xl md:text-2xl font-bold text-ink mb-2">Web Development</h3>
+              <p class="text-muted text-sm leading-relaxed max-w-[54ch]">
+                Membangun antarmuka interaktif menggunakan struktur HTML semantik, manipulasi pohon DOM, dan komunikasi asynchronous berbasis RESTful API.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-line flex items-center justify-between text-xs font-semibold text-accent">
+              <span>Fokus: DOM &amp; Fetch API</span>
+              <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </div>
           </div>
         </article>
 
-        <!-- Card 2 -->
-        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
-          <img src="https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?auto=format&fit=crop&w=600&q=80" alt="UI/UX Design" class="w-full h-48 object-cover" />
-          <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-xl font-bold text-brand-primary mb-2">UI/UX Design</h3>
-            <p class="text-gray-600 text-sm mb-4 flex-grow">
-              Perancangan antarmuka pengguna yang intuitif, menarik, serta mengutamakan pengalaman terbaik bagi pengguna.
-            </p>
-            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
-              Baca Selengkapnya &rarr;
-            </a>
+        <!-- Tile 2 (UI/UX Design) -->
+        <article class="group bg-surface rounded-3xl overflow-hidden border border-line shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between">
+          <div class="aspect-[4/3] overflow-hidden bg-line/20">
+            <img 
+              src="./assets/uiux.jpg" 
+              alt="Sketsa wireframe antarmuka pengguna" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+              loading="lazy"
+            />
+          </div>
+          <div class="p-6 flex flex-col justify-between flex-grow">
+            <div>
+              <div class="font-mono text-xs text-muted mb-2">Wireframing &amp; Flow</div>
+              <h3 class="text-lg font-bold text-ink mb-2">UI/UX Design</h3>
+              <p class="text-muted text-xs leading-relaxed">
+                Menyusun tata letak antarmuka yang intuitif dengan mempertimbangkan hierarki visual, kontras warna, dan keterbacaan teks.
+              </p>
+            </div>
+            <div class="pt-4 mt-4 border-t border-line flex items-center justify-between text-xs font-semibold text-accent">
+              <span>Fokus: User Experience</span>
+              <span class="group-hover:translate-x-1 transition-transform">&rarr;</span>
+            </div>
           </div>
         </article>
 
-        <!-- Card 3 -->
-        <article class="bg-white rounded-xl shadow-md overflow-hidden hover:shadow-xl transition duration-300 border border-gray-100 flex flex-col">
-          <img src="https://media.geeksforgeeks.org/wp-content/uploads/20260109171547046619/responsive_web_design.webp" alt="Responsive Design" class="w-full h-48 object-cover" />
-          <div class="p-6 flex flex-col flex-grow">
-            <h3 class="text-xl font-bold text-brand-primary mb-2">Responsive Design</h3>
-            <p class="text-gray-600 text-sm mb-4 flex-grow">
-              Optimasi tampilan antarmuka agar fleksibel dan tampak sempurna di berbagai ukuran perangkat.
+        <!-- Tile 3 (Responsive Design) -->
+        <article class="md:col-span-3 group bg-surface rounded-3xl p-6 md:p-8 border border-line shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col md:flex-row gap-6 items-center justify-between">
+          <div class="w-full md:w-1/3 aspect-[16/10] rounded-2xl overflow-hidden bg-line/20">
+            <img 
+              src="./assets/responsive.jpg" 
+              alt="Uji tampilan responsif di multi-perangkat" 
+              class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
+              loading="lazy"
+            />
+          </div>
+          <div class="w-full md:w-2/3 space-y-3">
+            <div class="font-mono text-xs text-muted">Adaptabilitas Tampilan</div>
+            <h3 class="text-xl font-bold text-ink">Responsive Design</h3>
+            <p class="text-muted text-sm leading-relaxed max-w-[65ch]">
+              Memastikan antarmuka tampil konsisten di layar smartphone (360px), tablet (768px), hingga monitor desktop tanpa pergeseran tata letak maupun overflow horizontal yang mengganggu pengguna.
             </p>
-            <a href="#" class="text-brand-secondary font-semibold text-sm hover:underline inline-flex items-center gap-1">
-              Baca Selengkapnya &rarr;
-            </a>
+            <div class="pt-2 text-xs font-mono text-muted">
+              Breakpoints: <span class="text-ink font-semibold">sm: 640px</span> | <span class="text-ink font-semibold">md: 768px</span> | <span class="text-ink font-semibold">lg: 1024px</span>
+            </div>
           </div>
         </article>
 
       </div>
     </section>
 
-    <!-- FORM SECTION DENGAN VALIDASI JAVASCRIPT (Codelab Modul 2) -->
-    <section id="contact" class="px-6 py-10 bg-gray-100 mt-10">
-      <form id="contact-form" class="bg-white p-6 rounded-xl shadow max-w-md mx-auto space-y-4">
-        <h3 class="text-xl font-bold text-center text-brand-primary mb-4">Hubungi Kami</h3>
-        <div>
-          <label for="name-input" class="block text-sm font-medium text-gray-700 mb-1">Nama</label>
-          <input 
-            id="name-input" 
-            type="text" 
-            placeholder="Masukkan nama" 
-            class="border border-gray-300 p-2 w-full rounded focus:outline-none focus:ring-2 focus:ring-brand-secondary transition duration-200" 
-          />
+    <!-- CONTACT FORM SECTION (A2 & A3: Form Validation & Warnings) -->
+    <section id="contact" class="py-16 md:py-24 px-6 border-t border-line bg-surface/40">
+      <div class="max-w-7xl mx-auto">
+        <div class="grid grid-cols-1 lg:grid-cols-[1fr_1.2fr] gap-12 lg:gap-16 items-start">
+          
+          <!-- Informasi Kontak Kiri -->
+          <div class="space-y-6">
+            <span class="font-mono text-xs uppercase tracking-wider text-accent font-semibold block">03 / Interaksi Form</span>
+            <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-ink">
+              Hubungi Kami
+            </h2>
+            <p class="text-muted text-sm md:text-base leading-relaxed max-w-[48ch]">
+              Kirimkan pertanyaan seputar praktikum. Form ini menguji validasi JavaScript sisi klien untuk field kosong dan kepatuhan format sebelum pengiriman.
+            </p>
+
+            <div class="space-y-3 text-xs text-muted font-mono pt-4 border-t border-line">
+              <p><strong class="text-ink font-sans">Lab:</strong> Laboratorium Informatika UMM</p>
+              <p><strong class="text-ink font-sans">Lokasi:</strong> GKB III, Kampus III UMM</p>
+              <p><strong class="text-ink font-sans">Email:</strong> lab.informatika@umm.ac.id</p>
+            </div>
+          </div>
+
+          <!-- Form Validasi Kanan -->
+          <form id="contact-form" class="bg-surface p-6 sm:p-8 rounded-3xl shadow-[0_18px_40px_-20px_rgb(28_27_25/0.15)] border border-line space-y-5" novalidate>
+            <!-- Status Alert Box -->
+            <div id="form-status" role="status" class="hidden"></div>
+
+            <!-- Field 1: Nama Lengkap (A2: Pengecekan Wajib Diisi) -->
+            <div>
+              <label for="contact-name" class="block text-xs font-semibold text-ink uppercase tracking-wider mb-1.5">
+                Nama Lengkap <span class="text-danger">*</span>
+              </label>
+              <input 
+                id="contact-name" 
+                name="name" 
+                type="text" 
+                placeholder="Contoh: Christian Kusuma" 
+                class="w-full bg-paper border border-line px-3.5 py-2.5 rounded-xl text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent transition duration-150"
+                aria-describedby="name-error"
+                required
+              />
+              <p id="name-error" class="text-xs text-danger font-medium mt-1.5 hidden"></p>
+            </div>
+
+            <!-- Field 2: Email (A3: Pengecekan Format Email Tidak Sesuai) -->
+            <div>
+              <label for="contact-email" class="block text-xs font-semibold text-ink uppercase tracking-wider mb-1.5">
+                Alamat Email <span class="text-danger">*</span>
+              </label>
+              <input 
+                id="contact-email" 
+                name="email" 
+                type="email" 
+                placeholder="Contoh: student@umm.ac.id" 
+                class="w-full bg-paper border border-line px-3.5 py-2.5 rounded-xl text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent transition duration-150"
+                aria-describedby="email-error"
+                required
+              />
+              <p id="email-error" class="text-xs text-danger font-medium mt-1.5 hidden"></p>
+            </div>
+
+            <!-- Field 3: Pesan Pertanyaan -->
+            <div>
+              <label for="contact-message" class="block text-xs font-semibold text-ink uppercase tracking-wider mb-1.5">
+                Pesan <span class="text-danger">*</span>
+              </label>
+              <textarea 
+                id="contact-message" 
+                name="message" 
+                rows="4" 
+                placeholder="Tuliskan pertanyaan Anda mengenai materi modul di sini..." 
+                class="w-full bg-paper border border-line px-3.5 py-2.5 rounded-xl text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent transition duration-150"
+                aria-describedby="message-error"
+                required
+              ></textarea>
+              <p id="message-error" class="text-xs text-danger font-medium mt-1.5 hidden"></p>
+            </div>
+
+            <!-- Submit Button -->
+            <button 
+              type="submit" 
+              class="w-full bg-accent hover:bg-accent-hover text-white font-semibold text-sm py-3 px-6 rounded-xl shadow-md transition duration-200 active:scale-[0.98] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+            >
+              Kirim Pesan
+            </button>
+          </form>
+
         </div>
-        <p id="form-message" class="text-sm font-semibold hidden"></p>
-        <button type="submit" class="bg-brand-secondary hover:bg-brand-primary text-white px-4 py-2 rounded w-full font-medium transition duration-200">
-          Kirim
-        </button>
-      </form>
+      </div>
     </section>
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-brand-primary text-white text-center py-4 text-sm">
-    <p>Copyright 2026</p>
+  <footer class="bg-ink text-paper/70 text-xs py-6 px-6 border-t border-line/20">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
+      <p>&copy; 2026 Laboratorium Informatika · Universitas Muhammadiyah Malang</p>
+      <div class="flex items-center gap-4 font-mono text-[11px]">
+        <a href="./index.html" class="hover:text-accent transition">Home</a>
+        <span>&bull;</span>
+        <a href="./users.html" class="hover:text-accent transition">Data API (Codelab)</a>
+        <span>&bull;</span>
+        <a href="#main" class="hover:text-accent transition">Kembali ke Atas &uarr;</a>
+      </div>
+    </div>
   </footer>
 
-  <!-- External JavaScript dengan defer sesuai materi Modul 2 Bab 1.1 Tabel 1.2 -->
+  <!-- Script Interaksi Codelab (Navbar Toggle & Form Validation) -->
   <script src="./script.js" defer></script>
 </body>
 </html>
