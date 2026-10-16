@@ -50,14 +50,14 @@ const getInitials = (name) => {
 };
 
 /**
- * Palet warna netral bersahaja untuk latar belakang avatar squircle
+ * Palet warna untuk latar belakang avatar inisial
  */
 const AVATAR_PALETTES = [
-  "bg-amber-100 text-amber-800 border-amber-200",
-  "bg-stone-200 text-stone-800 border-stone-300",
-  "bg-orange-100 text-accent border-orange-200",
+  "bg-blue-100 text-blue-800 border-blue-200",
+  "bg-indigo-100 text-indigo-800 border-indigo-200",
   "bg-emerald-100 text-emerald-800 border-emerald-200",
-  "bg-slate-200 text-slate-800 border-slate-300",
+  "bg-purple-100 text-purple-800 border-purple-200",
+  "bg-amber-100 text-amber-800 border-amber-200",
 ];
 
 /**
@@ -77,9 +77,9 @@ const renderUsers = (users) => {
   // Tampilan ketika hasil pencarian tidak menemukan kecocokan
   if (!users || users.length === 0) {
     userList.innerHTML = `
-      <div class="col-span-full text-center py-12 px-6 bg-surface rounded-2xl border border-dashed border-line">
-        <p class="text-sm font-semibold text-ink">Tidak ada data pengguna yang cocok.</p>
-        <p class="text-xs text-muted mt-1">Coba gunakan kata kunci pencarian nama atau email lainnya.</p>
+      <div class="col-span-full text-center py-12 px-6 bg-white rounded-xl border border-dashed border-slate-300">
+        <p class="text-sm font-semibold text-slate-800">Tidak ada data pengguna yang cocok.</p>
+        <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian nama atau email lainnya.</p>
       </div>
     `;
     return;
@@ -87,7 +87,7 @@ const renderUsers = (users) => {
 
   // Konversi array pengguna menjadi elemen card HTML via map() + join("")
   userList.innerHTML = users
-    .map((user, index) => {
+    .map((user) => {
       // Destructuring properti objek sesuai materi Bab 3.3
       const { id, name, username, email, phone, website, company, address } = user;
 
@@ -103,53 +103,50 @@ const renderUsers = (users) => {
       const initials = getInitials(safeName);
 
       return `
-        <article 
-          class="animate-rise bg-surface rounded-2xl p-6 border border-line shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col justify-between"
-          style="animation-delay: ${index * 40}ms"
-        >
+        <article class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
           <div>
             <!-- Header Kartu: Inisial Squircle & ID -->
             <div class="flex items-center justify-between gap-3 mb-4">
               <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-xl border flex items-center justify-center font-mono font-bold text-xs ${avatarClass}">
+                <div class="w-10 h-10 rounded-lg border flex items-center justify-center font-bold text-xs ${avatarClass}">
                   ${initials}
                 </div>
                 <div>
-                  <h3 class="text-base font-bold text-ink leading-tight">${safeName}</h3>
-                  <p class="text-xs font-mono text-muted">@${safeUsername}</p>
+                  <h3 class="text-base font-bold text-slate-900 leading-tight">${safeName}</h3>
+                  <p class="text-xs text-slate-500">@${safeUsername}</p>
                 </div>
               </div>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-line/60 text-muted border border-line">
+              <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
                 #${id}
               </span>
             </div>
 
             <!-- Informasi Kontak & Perusahaan -->
-            <div class="space-y-1.5 text-xs text-muted pt-3 border-t border-line">
+            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
               <p class="flex items-center gap-1.5">
-                <span class="font-medium text-ink">Email:</span>
-                <a href="mailto:${safeEmail}" class="text-accent hover:underline break-all">${safeEmail}</a>
+                <span class="font-medium text-slate-800">Email:</span>
+                <a href="mailto:${safeEmail}" class="text-brand-secondary hover:underline break-all">${safeEmail}</a>
               </p>
-              <p><span class="font-medium text-ink">Perusahaan:</span> ${safeCompany}</p>
-              <p><span class="font-medium text-ink">Kota:</span> ${safeCity}</p>
-              <p><span class="font-medium text-ink">Telepon:</span> <span class="font-mono text-[11px]">${safePhone}</span></p>
+              <p><span class="font-medium text-slate-800">Perusahaan:</span> ${safeCompany}</p>
+              <p><span class="font-medium text-slate-800">Kota:</span> ${safeCity}</p>
+              <p><span class="font-medium text-slate-800">Telepon:</span> <span class="font-mono text-[11px]">${safePhone}</span></p>
             </div>
           </div>
 
           <!-- Tautan Eksternal Website -->
-          <div class="mt-4 pt-3 border-t border-line flex justify-end">
+          <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
             ${
               safeWebsite
                 ? `<a 
                     href="https://${safeWebsite}" 
                     target="_blank" 
                     rel="noopener noreferrer" 
-                    class="text-xs font-semibold text-accent hover:underline inline-flex items-center gap-1"
+                    class="text-xs font-semibold text-brand-secondary hover:underline inline-flex items-center gap-1"
                   >
                     <span>${safeWebsite}</span>
                     <span aria-hidden="true">&rarr;</span>
                   </a>`
-                : `<span class="text-xs text-muted">-</span>`
+                : `<span class="text-xs text-slate-400">-</span>`
             }
           </div>
         </article>
@@ -160,7 +157,7 @@ const renderUsers = (users) => {
 
 /**
  * Mengambil data dari REST API publik (JSONPlaceholder) menggunakan Fetch API (Bab 9).
- * Menangani mode demonstrasi kegagalan lewat parameter URL '?fail=1' (Keputusan D2).
+ * Menangani mode demonstrasi kegagalan lewat parameter URL '?fail=1'.
  */
 const getUsers = async () => {
   // Evaluasi mode fail untuk kemudahan demo pengujian error tanpa mematikan internet

@@ -73,8 +73,8 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     const setFieldError = (input, errorElement, message) => {
       if (!input || !errorElement) return;
-      input.classList.add("border-danger", "focus:ring-danger");
-      input.classList.remove("border-line", "focus:ring-accent");
+      input.classList.add("border-red-500", "focus:ring-red-500");
+      input.classList.remove("border-slate-300", "focus:ring-brand-secondary");
       input.setAttribute("aria-invalid", "true");
       errorElement.textContent = message;
       errorElement.classList.remove("hidden");
@@ -88,8 +88,8 @@ document.addEventListener("DOMContentLoaded", () => {
      */
     const clearFieldError = (input, errorElement) => {
       if (!input || !errorElement) return;
-      input.classList.remove("border-danger", "focus:ring-danger");
-      input.classList.add("border-line", "focus:ring-accent");
+      input.classList.remove("border-red-500", "focus:ring-red-500");
+      input.classList.add("border-slate-300", "focus:ring-brand-secondary");
       input.removeAttribute("aria-invalid");
       errorElement.textContent = "";
       errorElement.classList.add("hidden");
@@ -158,16 +158,16 @@ document.addEventListener("DOMContentLoaded", () => {
       // Jika ada field yang tidak valid, arahkan fokus ke field error pertama
       if (hasError) {
         if (formStatus) {
-          formStatus.className = "p-3.5 rounded-xl text-xs font-medium bg-red-50 text-danger border border-red-200 block";
-          formStatus.textContent = "Mohon lengkapi seluruh isian form sesuai petunjuk.";
+          formStatus.className = "p-3.5 rounded-lg text-xs font-semibold bg-red-50 text-red-700 border border-red-200 block";
+          formStatus.textContent = "Mohon lengkapi seluruh isian form dengan benar.";
         }
         return;
       }
 
       // Seluruh field valid: tampilkan pesan sukses terkalibrasi dan reset form
       if (formStatus) {
-        formStatus.className = "p-4 rounded-xl text-sm font-medium bg-emerald-50 text-ok border border-emerald-200 block";
-        formStatus.innerHTML = `Pesan dari <strong>${nameVal}</strong> telah tersimpan. Kami akan menghubungi melalui ${emailVal}.`;
+        formStatus.className = "p-4 rounded-lg text-sm font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200 block";
+        formStatus.innerHTML = `Terima kasih, <strong>${nameVal}</strong>! Pesan Anda telah terkirim.`;
       }
 
       contactForm.reset();

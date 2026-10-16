@@ -3,58 +3,46 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Codelab Modul 2 - Mengambil dan Menampilkan Data dari Public REST API menggunakan Fetch API." />
   <title>Public API - Data Pengguna | Codelab Modul 2</title>
-
-  <!-- Google Fonts: Geist & Geist Mono -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700&display=swap" rel="stylesheet" />
-
   <link href="./output.css" rel="stylesheet" />
 </head>
-<body class="bg-paper text-ink font-sans antialiased min-h-screen flex flex-col">
+<body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
 
-  <!-- ACCESSIBILITY: Skip to content -->
-  <a href="#main" class="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-4 focus:z-50 focus:px-4 focus:py-2 focus:bg-ink focus:text-paper focus:rounded-lg focus:shadow-lg focus:outline-none">
-    Lewati ke konten utama
-  </a>
-
-  <!-- NAVBAR (Konsisten dengan index.html) -->
-  <header class="bg-ink/95 text-paper px-6 py-4 shadow-[0_10px_30px_-15px_rgb(28_27_25/0.2)] sticky top-0 z-40 backdrop-blur-md">
+  <!-- NAVBAR -->
+  <header class="bg-brand-primary text-white px-6 py-4 shadow-md sticky top-0 z-50">
     <nav class="max-w-7xl mx-auto flex justify-between items-center flex-wrap">
-      <a href="./index.html" class="flex items-center gap-1.5 font-bold text-xl tracking-tight text-paper group">
+      <a href="./index.html" class="flex items-center gap-2 font-bold text-xl text-white tracking-wide">
+        <span class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-brand-secondary text-white font-bold text-sm">MW</span>
         <span>MyWebsite</span>
-        <span class="w-2 h-2 rounded-full bg-accent inline-block group-hover:scale-125 transition-transform"></span>
       </a>
 
       <!-- Mobile Hamburger Button -->
       <button 
         id="navbar-toggle" 
         type="button" 
-        class="md:hidden text-paper hover:text-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-lg p-1.5 transition-colors" 
-        aria-label="Toggle Menu Navigasi" 
+        class="md:hidden text-white hover:text-cyan-300 focus:outline-none p-1.5 rounded-lg transition duration-200"
+        aria-label="Toggle Menu"
         aria-controls="nav-menu"
         aria-expanded="false"
       >
-        <svg id="nav-icon-open" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"></path>
+        <svg id="nav-icon-open" class="w-6 h-6 block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
         </svg>
-        <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="1.5">
-          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"></path>
+        <svg id="nav-icon-close" class="w-6 h-6 hidden" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
         </svg>
       </button>
 
       <!-- Navigation Menu -->
-      <ul id="nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 items-start md:items-center gap-4 md:gap-8 font-medium text-sm border-t md:border-none border-line/20 pt-4 md:pt-0">
-        <li><a href="./index.html" class="text-paper/80 hover:text-accent transition duration-200">Home</a></li>
-        <li><a href="./index.html#about" class="text-paper/80 hover:text-accent transition duration-200">About</a></li>
-        <li><a href="./index.html#cards" class="text-paper/80 hover:text-accent transition duration-200">Services</a></li>
-        <li><a href="./index.html#contact" class="text-paper/80 hover:text-accent transition duration-200">Contact</a></li>
+      <ul id="nav-menu" class="hidden md:flex flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 items-start md:items-center gap-4 md:gap-6 font-medium text-sm md:text-base border-t md:border-none border-blue-800 pt-4 md:pt-0">
+        <li><a href="./index.html" class="text-slate-200 hover:text-cyan-300 transition duration-200">Home</a></li>
+        <li><a href="./index.html#about" class="text-slate-200 hover:text-cyan-300 transition duration-200">About</a></li>
+        <li><a href="./index.html#cards" class="text-slate-200 hover:text-cyan-300 transition duration-200">Services</a></li>
+        <li><a href="./index.html#contact" class="text-slate-200 hover:text-cyan-300 transition duration-200">Contact</a></li>
         <li>
-          <span class="inline-flex items-center gap-1.5 bg-accent text-white text-xs font-semibold px-3.5 py-1.5 rounded-lg shadow-sm">
+          <span class="bg-brand-secondary text-white font-semibold text-xs md:text-sm px-4 py-2 rounded-lg shadow inline-flex items-center gap-1.5">
             <span>Data API</span>
-            <span class="font-mono text-[10px] bg-white/20 px-1 py-0.2 rounded">GET</span>
+            <span class="text-[10px] bg-white/20 px-1 py-0.5 rounded font-mono">GET</span>
           </span>
         </li>
       </ul>
@@ -62,136 +50,131 @@
   </header>
 
   <!-- MAIN CONTENT (Codelab Modul 2 Bagian B) -->
-  <main id="main" class="flex-grow max-w-7xl w-full mx-auto px-6 py-12 md:py-16">
+  <main class="flex-grow max-w-7xl w-full mx-auto px-6 py-10 md:py-14">
     
     <!-- HEADER SECTION -->
-    <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 pb-8 border-b border-line mb-8">
+    <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 pb-6 border-b border-slate-200 mb-8">
       <div>
-        <div class="inline-flex items-center gap-2 font-mono text-xs text-muted mb-2">
-          <span>Modul 2 · Bab 9 Fetch API</span>
+        <div class="inline-flex items-center gap-2 text-xs font-semibold text-brand-secondary mb-1">
+          <span>Modul 2 · Fetch API</span>
           <span>&bull;</span>
-          <code class="text-accent bg-accent/10 px-1.5 py-0.5 rounded font-mono text-[11px]">Method GET</code>
+          <code class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-[11px] font-mono">Method GET</code>
         </div>
-        <h1 class="text-3xl md:text-4xl font-bold tracking-tight text-ink">
+        <h1 class="text-2xl md:text-3xl font-bold text-brand-primary">
           Data Pengguna REST API
         </h1>
-        <p class="text-muted text-sm mt-1.5 max-w-[58ch]">
-          Data diperoleh secara asynchronous dari endpoint publik <code class="font-mono text-xs bg-line/60 px-1.5 py-0.5 rounded text-ink">jsonplaceholder.typicode.com/users</code>.
+        <p class="text-slate-600 text-sm mt-1">
+          Data diambil menggunakan Fetch API dari endpoint publik <code class="bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded text-xs font-mono">jsonplaceholder.typicode.com/users</code>.
         </p>
       </div>
 
-      <!-- Counter Badge & Fail Mode Shortcut -->
+      <!-- Badge Jumlah User & Shortcut Uji Error -->
       <div class="flex items-center gap-3">
-        <span id="user-count-badge" class="font-mono text-xs font-semibold px-3 py-1.5 rounded-full bg-surface border border-line text-ink shadow-sm">
+        <span id="user-count-badge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 shadow-sm">
           Memuat...
         </span>
         <a 
           href="./users.html?fail=1" 
-          title="Uji tampilan pesan error dan mekanisme retry tanpa mematikan internet"
-          class="font-mono text-[11px] text-muted hover:text-danger underline transition"
+          title="Uji tampilan pesan error dan tombol coba lagi"
+          class="text-xs text-slate-500 hover:text-red-600 underline transition"
         >
           [Uji Error ?fail=1]
         </a>
       </div>
     </div>
 
-    <!-- TOOLBAR PENCARIAN REAL-TIME (Bab 9.1 Gambar 9.2: id="search-input") -->
+    <!-- SEARCH & FILTER TOOLBAR (Bab 9.1 Gambar 9.2: id="search-input") -->
     <div class="max-w-md mb-8">
-      <label for="search-input" class="block text-xs font-mono font-semibold text-muted uppercase tracking-wider mb-2">
-        Pencarian Real-Time (Filter Judul / Nama)
+      <label for="search-input" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
+        Pencarian Real-Time
       </label>
-      <div class="relative">
-        <input 
-          id="search-input" 
-          type="search" 
-          placeholder="Cari user berdasarkan nama, username, atau email..." 
-          class="w-full bg-surface border border-line pl-10 pr-4 py-2.5 rounded-xl text-sm text-ink placeholder:text-muted/60 focus:outline-none focus:ring-2 focus:ring-accent transition duration-150 shadow-sm"
-          autocomplete="off"
-        />
-        <svg class="w-4 h-4 text-muted absolute left-3.5 top-1/2 -translate-y-1/2 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-        </svg>
-      </div>
+      <input 
+        id="search-input" 
+        type="search" 
+        placeholder="Cari user berdasarkan nama, email, atau username..." 
+        class="w-full bg-white border border-slate-300 p-2.5 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary transition duration-150 shadow-sm"
+        autocomplete="off"
+      />
     </div>
 
-    <!-- STATE 1: LOADING STATE DENGAN SKELETON SHIMMER (B2: Pesan Loading) -->
+    <!-- STATE 1: LOADING STATE (B2: Pesan Loading) -->
     <div id="loading-container" class="space-y-6" role="status">
-      <div class="flex items-center gap-2.5 text-accent text-sm font-semibold">
-        <svg class="w-4 h-4 animate-spin text-accent" fill="none" viewBox="0 0 24 24">
+      <div class="flex items-center gap-2 text-brand-secondary text-sm font-semibold">
+        <svg class="w-4 h-4 animate-spin text-brand-secondary" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v8H4z"></path>
         </svg>
-        <p id="loading-message">Memuat data dari server...</p>
+        <p id="loading-message">Mengambil data dari server...</p>
       </div>
 
-      <!-- Grid Skeleton Cards (6 cards) -->
+      <!-- Skeleton Cards -->
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <div class="bg-surface rounded-2xl p-6 border border-line space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl shimmer-box"></div>
-            <div class="space-y-1.5 flex-grow">
-              <div class="h-4 w-3/4 shimmer-box rounded"></div>
-              <div class="h-3 w-1/3 shimmer-box rounded"></div>
+            <div class="w-10 h-10 rounded-xl shimmer-loader"></div>
+            <div class="space-y-2 flex-grow">
+              <div class="h-4 w-3/4 shimmer-loader rounded"></div>
+              <div class="h-3 w-1/3 shimmer-loader rounded"></div>
             </div>
           </div>
-          <div class="space-y-2 pt-2 border-t border-line">
-            <div class="h-3 w-full shimmer-box rounded"></div>
-            <div class="h-3 w-4/5 shimmer-box rounded"></div>
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="h-3 w-full shimmer-loader rounded"></div>
+            <div class="h-3 w-4/5 shimmer-loader rounded"></div>
           </div>
         </div>
 
-        <div class="bg-surface rounded-2xl p-6 border border-line space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl shimmer-box"></div>
-            <div class="space-y-1.5 flex-grow">
-              <div class="h-4 w-2/3 shimmer-box rounded"></div>
-              <div class="h-3 w-1/2 shimmer-box rounded"></div>
+            <div class="w-10 h-10 rounded-xl shimmer-loader"></div>
+            <div class="space-y-2 flex-grow">
+              <div class="h-4 w-2/3 shimmer-loader rounded"></div>
+              <div class="h-3 w-1/2 shimmer-loader rounded"></div>
             </div>
           </div>
-          <div class="space-y-2 pt-2 border-t border-line">
-            <div class="h-3 w-full shimmer-box rounded"></div>
-            <div class="h-3 w-3/5 shimmer-box rounded"></div>
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="h-3 w-full shimmer-loader rounded"></div>
+            <div class="h-3 w-3/5 shimmer-loader rounded"></div>
           </div>
         </div>
 
-        <div class="bg-surface rounded-2xl p-6 border border-line space-y-4">
+        <div class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm space-y-4">
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl shimmer-box"></div>
-            <div class="space-y-1.5 flex-grow">
-              <div class="h-4 w-3/4 shimmer-box rounded"></div>
-              <div class="h-3 w-1/4 shimmer-box rounded"></div>
+            <div class="w-10 h-10 rounded-xl shimmer-loader"></div>
+            <div class="space-y-2 flex-grow">
+              <div class="h-4 w-3/4 shimmer-loader rounded"></div>
+              <div class="h-3 w-1/4 shimmer-loader rounded"></div>
             </div>
           </div>
-          <div class="space-y-2 pt-2 border-t border-line">
-            <div class="h-3 w-4/5 shimmer-box rounded"></div>
-            <div class="h-3 w-2/3 shimmer-box rounded"></div>
+          <div class="space-y-2 pt-2 border-t border-slate-100">
+            <div class="h-3 w-4/5 shimmer-loader rounded"></div>
+            <div class="h-3 w-2/3 shimmer-loader rounded"></div>
           </div>
         </div>
       </div>
     </div>
 
     <!-- STATE 2: ERROR STATE (B3: Pesan Error & Tombol Coba Lagi) -->
-    <div id="error-container" class="hidden max-w-lg mx-auto my-12 p-6 rounded-2xl bg-red-50 border border-red-200 text-center space-y-4">
-      <div class="w-10 h-10 rounded-full bg-red-100 text-danger flex items-center justify-center mx-auto">
+    <div id="error-container" class="hidden max-w-lg mx-auto my-12 p-6 rounded-xl bg-red-50 border border-red-200 text-center space-y-4">
+      <div class="w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center mx-auto">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" stroke-width="2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
         </svg>
       </div>
       <div>
-        <h3 class="text-base font-bold text-danger">Gagal Mengambil Data</h3>
-        <p id="error-message" class="text-xs text-danger/90 mt-1 leading-relaxed"></p>
+        <h3 class="text-base font-bold text-red-900">Gagal Mengambil Data</h3>
+        <p id="error-message" class="text-xs text-red-700 mt-1 leading-relaxed"></p>
       </div>
       <div class="flex items-center justify-center gap-3 pt-2">
         <button 
           id="retry-btn" 
           type="button" 
-          class="bg-danger hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-xl transition duration-150 shadow-sm active:scale-[0.98]"
+          class="bg-red-600 hover:bg-red-700 text-white text-xs font-semibold px-4 py-2 rounded-lg transition duration-150 shadow-sm active:scale-[0.98]"
         >
           Coba Lagi (Retry)
         </button>
         <a 
           href="./users.html" 
-          class="bg-surface hover:bg-line/40 text-ink text-xs font-semibold px-4 py-2 rounded-xl border border-line transition duration-150 shadow-sm"
+          class="bg-white hover:bg-slate-100 text-slate-700 text-xs font-semibold px-4 py-2 rounded-lg border border-slate-300 transition duration-150 shadow-sm"
         >
           Muat Endpoint Normal
         </a>
@@ -206,20 +189,20 @@
   </main>
 
   <!-- FOOTER -->
-  <footer class="bg-ink text-paper/70 text-xs py-6 px-6 border-t border-line/20 mt-auto">
-    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row justify-between items-center gap-4">
-      <p>&copy; 2026 Laboratorium Informatika · Universitas Muhammadiyah Malang</p>
-      <div class="flex items-center gap-4 font-mono text-[11px]">
-        <a href="./index.html" class="hover:text-accent transition">Home</a>
+  <footer class="bg-brand-primary text-white text-center py-5 text-sm mt-auto">
+    <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <p>&copy; 2026 Laboratorium Informatika - Universitas Muhammadiyah Malang</p>
+      <div class="flex items-center gap-4 text-xs text-slate-300">
+        <a href="./index.html" class="hover:text-cyan-300">Home</a>
         <span>&bull;</span>
-        <a href="./users.html" class="text-accent font-semibold transition">Data API (Codelab)</a>
+        <a href="./users.html" class="hover:text-cyan-300">Data API</a>
       </div>
     </div>
   </footer>
 
-  <!-- Shared Navbar Toggle Script -->
+  <!-- Script Navbar Mobile -->
   <script src="./script.js" defer></script>
-  <!-- Fetch API & Data Card Rendering Script -->
+  <!-- Script Fetch API & Card Rendering -->
   <script src="./users.js" defer></script>
 </body>
 </html>
