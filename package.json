@@ -2,8 +2,8 @@
   "name": "modul-2-web-praktikum",
   "version": "1.0.0",
   "scripts": {
-    "build:css": "npx @tailwindcss/cli -i ./src/main.css -o ./src/output.css",
-    "watch:css": "npx @tailwindcss/cli -i ./src/main.css -o ./src/output.css --watch",
+    "build:css": "npx @tailwindcss/cli -i ./src/css/main.css -o ./src/css/output.css",
+    "watch:css": "npx @tailwindcss/cli -i ./src/css/main.css -o ./src/css/output.css --watch",
     "test:api": "npx newman run postman/Codelab_Users_API.postman_collection.json -e postman/Modul2_Environment.postman_environment.json",
     "test:anime": "npx newman run postman/Codelab_Anime_API.postman_collection.json",
     "test:demo": "npx newman run postman/Demo_API.postman_collection.json -e postman/Modul2_Environment.postman_environment.json"
