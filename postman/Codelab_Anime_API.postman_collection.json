@@ -1,99 +1,88 @@
 {
   "info": {
-    "name": "Codelab Anime API (Kitsu)",
-    "description": "Koleksi pengujian endpoint Public REST API Anime Kitsu untuk Codelab Modul 2 Praktikum Pemrograman Web.",
+    "name": "Codelab Anime API (Studio Ghibli)",
+    "description": "Koleksi pengujian endpoint Public REST API Anime Studio Ghibli untuk Codelab Modul 2 Praktikum Pemrograman Web.",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
-      "name": "GET Popular Anime Catalog (Digunakan di users.html)",
+      "name": "GET All Anime Films (Digunakan di users.html)",
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/anime?page[limit]=12&sort=popularityRank",
+          "raw": "https://ghibliapi.vercel.app/films",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "anime"],
-          "query": [
-            { "key": "page[limit]", "value": "12" },
-            { "key": "sort", "value": "popularityRank" }
-          ]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["films"]
         },
-        "description": "Mengambil daftar anime terpopuler untuk dirender menjadi kartu visual di users.html."
+        "description": "Mengambil seluruh daftar film anime Studio Ghibli untuk dirender menjadi kartu visual di users.html."
       }
     },
     {
-      "name": "GET Single Anime Detail by ID",
+      "name": "GET Single Film Detail by ID",
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/anime/1",
+          "raw": "https://ghibliapi.vercel.app/films/2baf70d1-42bb-4437-b551-e5fed5a87abe",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "anime", "1"]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["films", "2baf70d1-42bb-4437-b551-e5fed5a87abe"]
         },
-        "description": "Mengambil data detail tunggal anime (Cowboy Bebop) berdasarkan ID."
+        "description": "Mengambil detail film anime tunggal (Castle in the Sky) berdasarkan ID UUID."
       }
     },
     {
-      "name": "GET Search Anime by Title",
+      "name": "GET Anime Characters / People",
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/anime?filter[text]=naruto&page[limit]=5",
+          "raw": "https://ghibliapi.vercel.app/people",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "anime"],
-          "query": [
-            { "key": "filter[text]", "value": "naruto" },
-            { "key": "page[limit]", "value": "5" }
-          ]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["people"]
         },
-        "description": "Pencarian anime secara dinamis berdasarkan kata kunci judul."
+        "description": "Mengambil karakter tokoh anime dalam katalog film Studio Ghibli."
       }
     },
     {
-      "name": "GET Trending Anime",
+      "name": "GET Anime Locations",
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/trending/anime",
+          "raw": "https://ghibliapi.vercel.app/locations",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "trending", "anime"]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["locations"]
         },
-        "description": "Mengambil serial anime yang sedang trending."
+        "description": "Mengambil lokasi latar tempat dalam film anime Studio Ghibli."
       }
     },
     {
-      "name": "GET Anime Categories",
+      "name": "GET Anime Species",
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/categories?page[limit]=5",
+          "raw": "https://ghibliapi.vercel.app/species",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "categories"],
-          "query": [
-            { "key": "page[limit]", "value": "5" }
-          ]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["species"]
         },
-        "description": "Mengambil kategori/genre anime publik."
+        "description": "Mengambil spesies makhluk dalam semesta anime Studio Ghibli."
       }
     },
     {
@@ -101,15 +90,15 @@
       "request": {
         "method": "GET",
         "header": [
-          { "key": "Accept", "value": "application/vnd.api+json" }
+          { "key": "Accept", "value": "application/json" }
         ],
         "url": {
-          "raw": "https://kitsu.io/api/edge/invalid-endpoint-404",
+          "raw": "https://ghibliapi.vercel.app/invalid-endpoint-404",
           "protocol": "https",
-          "host": ["kitsu", "io"],
-          "path": ["api", "edge", "invalid-endpoint-404"]
+          "host": ["ghibliapi", "vercel", "app"],
+          "path": ["invalid-endpoint-404"]
         },
-        "description": "Uji penanganan status HTTP 404 Not Found sesuai Bab 9.3."
+        "description": "Uji penanganan status respons HTTP 404 Not Found sesuai materi Bab 9.3."
       }
     }
   ]

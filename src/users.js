@@ -1,6 +1,6 @@
 /**
  * @file users.js
- * @description Modul pengambilan dan rendering data dari Public REST API Anime (Kitsu API) untuk Codelab Modul 2.
+ * @description Modul pengambilan dan rendering data dari Public REST API Anime (Studio Ghibli API) untuk Codelab Modul 2.
  * Mengimplementasikan:
  * 1. Fetch API method GET dengan async/await dan penanganan error try...catch (Bab 7 & 9)
  * 2. Pengecekan eksplisit HTTP response.ok (Bab 9.3)
@@ -19,7 +19,7 @@ const errorMessage = document.querySelector("#error-message");
 const retryBtn = document.querySelector("#retry-btn");
 const userCountBadge = document.querySelector("#user-count-badge");
 
-// Variabel penyimpan state data anime dari API
+// Variabel penyimpan state data anime dari REST API
 let animeData = [];
 
 /**
@@ -37,77 +37,64 @@ const escapeHTML = (text) => {
 };
 
 /**
- * Merender daftar anime ke dalam format Card visual interaktif pada DOM.
+ * Merender daftar film anime ke dalam format Card visual interaktif pada DOM.
  * Menggunakan Array Method map() dan Template Literal ${} sesuai Bab 4.2 & Bab 9.1 Gambar 9.3.
  * 
- * @param {Array<Object>} animes Array of objects data anime dari Kitsu API
+ * @param {Array<Object>} films Array of objects data anime dari Studio Ghibli API
  */
-const renderAnimeCards = (animes) => {
+const renderAnimeCards = (films) => {
   if (!userList) return;
 
   // Perbarui indikator jumlah data yang sedang tampil
   if (userCountBadge) {
-    userCountBadge.textContent = `${animes.length} anime`;
+    userCountBadge.textContent = `${films.length} film anime`;
   }
 
   // Tampilan ketika hasil pencarian tidak menemukan kecocokan
-  if (!animes || animes.length === 0) {
+  if (!films || films.length === 0) {
     userList.innerHTML = `
       <div class="col-span-full text-center py-14 px-6 bg-white rounded-2xl border border-dashed border-slate-300">
-        <p class="text-base font-bold text-slate-800">Tidak ada judul anime yang cocok.</p>
-        <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian judul anime lainnya.</p>
+        <p class="text-base font-bold text-slate-800">Tidak ada film anime yang cocok.</p>
+        <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian judul atau nama sutradara lainnya.</p>
       </div>
     `;
     return;
   }
 
   // Konversi array anime menjadi elemen card HTML via map() + join("")
-  userList.innerHTML = animes
-    .map((anime) => {
-      // Destructuring objek data anime sesuai materi Bab 3.3
-      const { id, attributes } = anime;
+  userList.innerHTML = films
+    .map((film) => {
+      // Destructuring properti objek film anime sesuai materi Bab 3.3
       const {
-        canonicalTitle,
-        titles,
-        synopsis,
-        averageRating,
-        posterImage,
-        episodeCount,
-        status,
-        startDate,
-        subtype,
-        popularityRank,
-        slug,
-      } = attributes || {};
+        id,
+        title,
+        original_title,
+        original_title_romanised,
+        image,
+        description,
+        director,
+        release_date,
+        running_time,
+        rt_score,
+      } = film;
 
-      const safeTitle = escapeHTML(canonicalTitle || "Tanpa Judul");
-      const safeJapanese = escapeHTML(titles?.ja_jp || "");
-      const safeSynopsis = escapeHTML(
-        synopsis
-          ? synopsis.length > 130
-            ? synopsis.slice(0, 127) + "..."
-            : synopsis
-          : "Sinopsis cerita belum tersedia dalam katalog publik."
+      const safeTitle = escapeHTML(title || "Tanpa Judul");
+      const safeKanji = escapeHTML(original_title || "");
+      const safeRomanised = escapeHTML(original_title_romanised || "");
+      const safeDirector = escapeHTML(director || "Studio Ghibli");
+      const safeYear = escapeHTML(release_date || "-");
+      const safeDuration = escapeHTML(running_time ? `${running_time} mnt` : "-");
+      const safeScore = escapeHTML(rt_score ? `${rt_score}%` : "N/A");
+      const safeDescription = escapeHTML(
+        description
+          ? description.length > 130
+            ? description.slice(0, 127) + "..."
+            : description
+          : "Deskripsi film anime belum tersedia."
       );
       const posterUrl = escapeHTML(
-        posterImage?.small ||
-        posterImage?.medium ||
-        posterImage?.original ||
-        "https://placehold.co/400x600/1e293b/ffffff?text=No+Cover"
+        image || "https://placehold.co/400x600/1e293b/ffffff?text=Studio+Ghibli"
       );
-
-      const ratingFormatted = averageRating
-        ? (parseFloat(averageRating) / 10).toFixed(1)
-        : "N/A";
-      const episodeFormatted = episodeCount
-        ? `${episodeCount} Ep`
-        : (status === "current" ? "Ongoing" : "Unknown");
-      const yearFormatted = startDate ? startDate.slice(0, 4) : "-";
-      const typeFormatted = subtype ? subtype.toUpperCase() : "TV";
-      const isOngoing = status === "current";
-      const statusBadge = isOngoing
-        ? '<span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Ongoing</span>'
-        : '<span class="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-medium px-2 py-0.5 rounded shadow">Finished</span>';
 
       return `
         <article class="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
@@ -122,38 +109,33 @@ const renderAnimeCards = (animes) => {
               />
               <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-40 transition-opacity"></div>
               
-              <!-- Badge Rating Bintang -->
+              <!-- Badge Rating Rotten Tomatoes -->
               <div class="absolute top-3 right-3 flex items-center gap-1 bg-black/75 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold shadow-md">
                 <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
                   <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
                 </svg>
-                <span>${ratingFormatted}</span>
+                <span>${safeScore}</span>
               </div>
 
-              <!-- Badge Status & Format -->
+              <!-- Badge Tahun Rilis & Durasi -->
               <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
-                ${statusBadge}
                 <span class="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
-                  ${escapeHTML(typeFormatted)}
+                  ${safeYear}
+                </span>
+                <span class="bg-slate-800/80 backdrop-blur-md text-white text-[10px] font-mono px-2 py-0.5 rounded shadow">
+                  ${safeDuration}
                 </span>
               </div>
-
-              <!-- Badge Peringkat Popularitas -->
-              ${
-                popularityRank
-                  ? `<div class="absolute top-3 left-3 bg-brand-primary/80 backdrop-blur-md text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded">
-                      #${popularityRank}
-                    </div>`
-                  : ""
-              }
             </div>
 
             <!-- Konten Kartu -->
             <div class="p-5 flex flex-col grow">
-              <!-- Meta Tahun & Episode -->
-              <div class="flex items-center justify-between text-xs text-slate-500 mb-1.5">
-                <span class="font-medium">${displayYear}</span>
-                <span class="font-mono">${escapeHTML(episodeFormatted)}</span>
+              <!-- Sutradara -->
+              <div class="flex items-center gap-1 text-xs text-brand-secondary font-semibold mb-1">
+                <svg class="w-3.5 h-3.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14M5 18h8a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v8a2 2 0 002 2z"/>
+                </svg>
+                <span class="line-clamp-1">${safeDirector}</span>
               </div>
 
               <!-- Judul Utama -->
@@ -161,32 +143,25 @@ const renderAnimeCards = (animes) => {
                 ${safeTitle}
               </h3>
 
-              <!-- Judul Kanji (Jika Ada) -->
-              ${
-                safeJapanese
-                  ? `<p class="text-[11px] font-medium text-slate-400 line-clamp-1 mb-2">${safeJapanese}</p>`
-                  : ""
-              }
+              <!-- Judul Kanji & Romanisasi -->
+              <p class="text-[11px] font-medium text-slate-400 line-clamp-1 mb-2">
+                ${safeKanji} ${safeRomanised ? `(${safeRomanised})` : ""}
+              </p>
 
               <!-- Sinopsis -->
               <p class="text-xs text-slate-600 leading-relaxed grow line-clamp-3 mb-4">
-                ${safeSynopsis}
+                ${safeDescription}
               </p>
             </div>
           </div>
 
-          <!-- Footer Kartu: Link Informasi Detail -->
+          <!-- Footer Kartu -->
           <div class="px-5 pb-4 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
-            <a 
-              href="https://kitsu.io/anime/${escapeHTML(slug || id)}" 
-              target="_blank" 
-              rel="noopener noreferrer" 
-              class="text-brand-secondary font-semibold hover:underline inline-flex items-center gap-1"
-            >
-              <span>Kitsu Info</span>
+            <span class="text-brand-secondary font-semibold group-hover:underline inline-flex items-center gap-1">
+              <span>Studio Ghibli</span>
               <span aria-hidden="true">&rarr;</span>
-            </a>
-            <span class="text-[11px] font-mono text-slate-400">ID: ${escapeHTML(id)}</span>
+            </span>
+            <span class="text-[10px] font-mono text-slate-400">ID: ${escapeHTML(id ? id.slice(0, 8) : "-")}</span>
           </div>
         </article>
       `;
@@ -195,7 +170,7 @@ const renderAnimeCards = (animes) => {
 };
 
 /**
- * Mengambil data anime dari public REST API Kitsu menggunakan Fetch API method GET (Bab 9).
+ * Mengambil data anime dari public REST API Studio Ghibli menggunakan Fetch API method GET (Bab 9).
  * Menangani loading state, error handling, dan mode demonstrasi kegagalan lewat URL '?fail=1'.
  */
 const getAnimeData = async () => {
@@ -203,22 +178,18 @@ const getAnimeData = async () => {
   const urlParams = new URLSearchParams(window.location.search);
   const isFailMode = urlParams.get("fail") === "1";
   const apiEndpoint = isFailMode
-    ? "https://kitsu.io/api/edge/invalid-endpoint-404"
-    : "https://kitsu.io/api/edge/anime?page[limit]=12&sort=popularityRank";
+    ? "https://ghibliapi.vercel.app/invalid-endpoint-404"
+    : "https://ghibliapi.vercel.app/films";
 
   try {
     // 1. Tampilkan state loading (spinner + skeleton loader) dan reset state error
     if (loadingContainer) loadingContainer.classList.remove("hidden");
-    if (loadingMessage) loadingMessage.textContent = "Mengambil katalog anime populer dari Kitsu REST API...";
+    if (loadingMessage) loadingMessage.textContent = "Mengambil katalog film anime dari Studio Ghibli REST API...";
     if (errorContainer) errorContainer.classList.add("hidden");
     if (userList) userList.innerHTML = "";
 
     // 2. Kirim permintaan HTTP GET via Fetch API (Bab 9.1 & 9.2)
-    const response = await fetch(apiEndpoint, {
-      headers: {
-        Accept: "application/vnd.api+json",
-      },
-    });
+    const response = await fetch(apiEndpoint);
 
     // 3. Pengecekan manual response.ok sesuai materi Bab 9.3 Gambar 9.7
     if (!response.ok) {
@@ -227,7 +198,7 @@ const getAnimeData = async () => {
 
     // 4. Konversi response JSON (Bab 8.3)
     const payload = await response.json();
-    animeData = Array.isArray(payload.data) ? payload.data : [];
+    animeData = Array.isArray(payload) ? payload : [];
 
     // 5. Render data anime ke dalam kartu visual
     renderAnimeCards(animeData);
@@ -243,7 +214,7 @@ const getAnimeData = async () => {
       errorMessage.textContent = `${error.message}. Periksa koneksi internet atau parameter endpoint lalu coba kembali.`;
     }
     if (errorContainer) errorContainer.classList.remove("hidden");
-    if (userCountBadge) userCountBadge.textContent = "0 anime";
+    if (userCountBadge) userCountBadge.textContent = "0 film anime";
   }
 };
 
@@ -251,17 +222,24 @@ const getAnimeData = async () => {
 // EVENT LISTENERS
 // ========================================================
 
-// Event 'input' untuk Real-Time Search berdasarkan judul anime (Bab 4.2 & Bab 6)
+// Event 'input' untuk Real-Time Search berdasarkan judul atau sutradara (Bab 4.2 & Bab 6)
 if (searchInput) {
   searchInput.addEventListener("input", () => {
     const keyword = searchInput.value.toLowerCase().trim();
     // Menggunakan Array Method filter() sesuai Bab 4.2 Tabel 4.1
-    const filteredAnime = animeData.filter((item) => {
-      const canonical = item.attributes?.canonicalTitle?.toLowerCase() || "";
-      const ja = item.attributes?.titles?.ja_jp?.toLowerCase() || "";
-      const en = item.attributes?.titles?.en?.toLowerCase() || "";
-      const syn = item.attributes?.synopsis?.toLowerCase() || "";
-      return canonical.includes(keyword) || ja.includes(keyword) || en.includes(keyword) || syn.includes(keyword);
+    const filteredAnime = animeData.filter((film) => {
+      const title = film.title ? film.title.toLowerCase() : "";
+      const kanji = film.original_title ? film.original_title.toLowerCase() : "";
+      const roman = film.original_title_romanised ? film.original_title_romanised.toLowerCase() : "";
+      const director = film.director ? film.director.toLowerCase() : "";
+      const desc = film.description ? film.description.toLowerCase() : "";
+      return (
+        title.includes(keyword) ||
+        kanji.includes(keyword) ||
+        roman.includes(keyword) ||
+        director.includes(keyword) ||
+        desc.includes(keyword)
+      );
     });
     renderAnimeCards(filteredAnime);
   });
