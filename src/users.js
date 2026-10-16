@@ -1,11 +1,11 @@
 /**
  * @file users.js
- * @description Modul pengambilan dan rendering data dari Public REST API untuk Codelab Modul 2.
+ * @description Modul pengambilan dan rendering data dari Public REST API Anime (Kitsu API) untuk Codelab Modul 2.
  * Mengimplementasikan:
  * 1. Fetch API method GET dengan async/await dan penanganan error try...catch (Bab 7 & 9)
  * 2. Pengecekan eksplisit HTTP response.ok (Bab 9.3)
  * 3. Loading state dan Error message interaktif dengan tombol coba lagi (Bab 9.1 & 9.3)
- * 4. Rendering data dalam bentuk Card menggunakan Template Literal, Destructuring, dan Array map (Bab 3.2, 3.3, 4.2)
+ * 4. Rendering data dalam bentuk Card visual responsif menggunakan Template Literal, Destructuring, dan Array map (Bab 3.2, 3.3, 4.2)
  * 5. Fitur Search real-time menggunakan Array filter() dan event input (Bab 4.2 & Bab 6)
  */
 
@@ -19,11 +19,11 @@ const errorMessage = document.querySelector("#error-message");
 const retryBtn = document.querySelector("#retry-btn");
 const userCountBadge = document.querySelector("#user-count-badge");
 
-// Variabel penyimpan state data pengguna
-let usersData = [];
+// Variabel penyimpan state data anime dari API
+let animeData = [];
 
 /**
- * Sanitasi string teks untuk mencegah celah XSS (Cross-Site Scripting)
+ * Sanitasi string teks untuk mencegah celah Cross-Site Scripting (XSS)
  * Sesuai materi Bab 9.1 Catatan Penting.
  * 
  * @param {string} text Teks mentah
@@ -37,117 +37,156 @@ const escapeHTML = (text) => {
 };
 
 /**
- * Menghasilkan dua inisial huruf dari nama pengguna untuk avatar visual.
- * 
- * @param {string} name Nama lengkap pengguna
- * @returns {string} Dua huruf inisial kapital
- */
-const getInitials = (name) => {
-  if (!name) return "??";
-  const parts = name.trim().split(" ");
-  if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
-  return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
-};
-
-/**
- * Palet warna untuk latar belakang avatar inisial
- */
-const AVATAR_PALETTES = [
-  "bg-blue-100 text-blue-800 border-blue-200",
-  "bg-indigo-100 text-indigo-800 border-indigo-200",
-  "bg-emerald-100 text-emerald-800 border-emerald-200",
-  "bg-purple-100 text-purple-800 border-purple-200",
-  "bg-amber-100 text-amber-800 border-amber-200",
-];
-
-/**
- * Merender daftar user ke dalam format Card sederhana pada DOM.
+ * Merender daftar anime ke dalam format Card visual interaktif pada DOM.
  * Menggunakan Array Method map() dan Template Literal ${} sesuai Bab 4.2 & Bab 9.1 Gambar 9.3.
  * 
- * @param {Array<Object>} users Array of objects data pengguna
+ * @param {Array<Object>} animes Array of objects data anime dari Kitsu API
  */
-const renderUsers = (users) => {
+const renderAnimeCards = (animes) => {
   if (!userList) return;
 
   // Perbarui indikator jumlah data yang sedang tampil
   if (userCountBadge) {
-    userCountBadge.textContent = `${users.length} pengguna`;
+    userCountBadge.textContent = `${animes.length} anime`;
   }
 
   // Tampilan ketika hasil pencarian tidak menemukan kecocokan
-  if (!users || users.length === 0) {
+  if (!animes || animes.length === 0) {
     userList.innerHTML = `
-      <div class="col-span-full text-center py-12 px-6 bg-white rounded-xl border border-dashed border-slate-300">
-        <p class="text-sm font-semibold text-slate-800">Tidak ada data pengguna yang cocok.</p>
-        <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian nama atau email lainnya.</p>
+      <div class="col-span-full text-center py-14 px-6 bg-white rounded-2xl border border-dashed border-slate-300">
+        <p class="text-base font-bold text-slate-800">Tidak ada judul anime yang cocok.</p>
+        <p class="text-xs text-slate-500 mt-1">Coba gunakan kata kunci pencarian judul anime lainnya.</p>
       </div>
     `;
     return;
   }
 
-  // Konversi array pengguna menjadi elemen card HTML via map() + join("")
-  userList.innerHTML = users
-    .map((user) => {
-      // Destructuring properti objek sesuai materi Bab 3.3
-      const { id, name, username, email, phone, website, company, address } = user;
+  // Konversi array anime menjadi elemen card HTML via map() + join("")
+  userList.innerHTML = animes
+    .map((anime) => {
+      // Destructuring objek data anime sesuai materi Bab 3.3
+      const { id, attributes } = anime;
+      const {
+        canonicalTitle,
+        titles,
+        synopsis,
+        averageRating,
+        posterImage,
+        episodeCount,
+        status,
+        startDate,
+        subtype,
+        popularityRank,
+        slug,
+      } = attributes || {};
 
-      const safeName = escapeHTML(name);
-      const safeUsername = escapeHTML(username);
-      const safeEmail = escapeHTML(email);
-      const safeCompany = escapeHTML(company?.name || "-");
-      const safeCity = escapeHTML(address?.city || "-");
-      const safePhone = escapeHTML(phone || "-");
-      const safeWebsite = escapeHTML(website || "");
+      const safeTitle = escapeHTML(canonicalTitle || "Tanpa Judul");
+      const safeJapanese = escapeHTML(titles?.ja_jp || "");
+      const safeSynopsis = escapeHTML(
+        synopsis
+          ? synopsis.length > 130
+            ? synopsis.slice(0, 127) + "..."
+            : synopsis
+          : "Sinopsis cerita belum tersedia dalam katalog publik."
+      );
+      const posterUrl = escapeHTML(
+        posterImage?.small ||
+        posterImage?.medium ||
+        posterImage?.original ||
+        "https://placehold.co/400x600/1e293b/ffffff?text=No+Cover"
+      );
 
-      const avatarClass = AVATAR_PALETTES[id % AVATAR_PALETTES.length];
-      const initials = getInitials(safeName);
+      const ratingFormatted = averageRating
+        ? (parseFloat(averageRating) / 10).toFixed(1)
+        : "N/A";
+      const episodeFormatted = episodeCount
+        ? `${episodeCount} Ep`
+        : (status === "current" ? "Ongoing" : "Unknown");
+      const yearFormatted = startDate ? startDate.slice(0, 4) : "-";
+      const typeFormatted = subtype ? subtype.toUpperCase() : "TV";
+      const isOngoing = status === "current";
+      const statusBadge = isOngoing
+        ? '<span class="bg-emerald-500/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">Ongoing</span>'
+        : '<span class="bg-slate-700/80 backdrop-blur-md text-white text-[10px] font-medium px-2 py-0.5 rounded shadow">Finished</span>';
 
       return `
-        <article class="bg-white rounded-xl p-6 border border-slate-200 shadow-sm hover:shadow-md transition-all duration-300 flex flex-col justify-between">
+        <article class="group bg-white rounded-2xl overflow-hidden border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between hover:-translate-y-1">
           <div>
-            <!-- Header Kartu: Inisial Squircle & ID -->
-            <div class="flex items-center justify-between gap-3 mb-4">
-              <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-lg border flex items-center justify-center font-bold text-xs ${avatarClass}">
-                  ${initials}
-                </div>
-                <div>
-                  <h3 class="text-base font-bold text-slate-900 leading-tight">${safeName}</h3>
-                  <p class="text-xs text-slate-500">@${safeUsername}</p>
-                </div>
+            <!-- Poster Anime dengan Overlay Badges -->
+            <div class="relative aspect-3/4 overflow-hidden bg-slate-900">
+              <img 
+                src="${posterUrl}" 
+                alt="${safeTitle}" 
+                class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                loading="lazy"
+              />
+              <div class="absolute inset-0 bg-linear-to-t from-black/80 via-transparent to-black/30 opacity-60 group-hover:opacity-40 transition-opacity"></div>
+              
+              <!-- Badge Rating Bintang -->
+              <div class="absolute top-3 right-3 flex items-center gap-1 bg-black/75 backdrop-blur-md text-amber-400 px-2.5 py-1 rounded-full text-xs font-bold shadow-md">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 20 20">
+                  <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                </svg>
+                <span>${ratingFormatted}</span>
               </div>
-              <span class="text-[11px] font-mono px-2 py-0.5 rounded-full bg-slate-100 text-slate-600 border border-slate-200">
-                #${id}
-              </span>
+
+              <!-- Badge Status & Format -->
+              <div class="absolute bottom-3 left-3 flex items-center gap-1.5">
+                ${statusBadge}
+                <span class="bg-blue-600/90 backdrop-blur-md text-white text-[10px] font-bold px-2 py-0.5 rounded shadow">
+                  ${escapeHTML(typeFormatted)}
+                </span>
+              </div>
+
+              <!-- Badge Peringkat Popularitas -->
+              ${
+                popularityRank
+                  ? `<div class="absolute top-3 left-3 bg-brand-primary/80 backdrop-blur-md text-white text-[10px] font-mono font-bold px-2 py-0.5 rounded">
+                      #${popularityRank}
+                    </div>`
+                  : ""
+              }
             </div>
 
-            <!-- Informasi Kontak & Perusahaan -->
-            <div class="space-y-1.5 text-xs text-slate-600 pt-3 border-t border-slate-100">
-              <p class="flex items-center gap-1.5">
-                <span class="font-medium text-slate-800">Email:</span>
-                <a href="mailto:${safeEmail}" class="text-brand-secondary hover:underline break-all">${safeEmail}</a>
+            <!-- Konten Kartu -->
+            <div class="p-5 flex flex-col grow">
+              <!-- Meta Tahun & Episode -->
+              <div class="flex items-center justify-between text-xs text-slate-500 mb-1.5">
+                <span class="font-medium">${displayYear}</span>
+                <span class="font-mono">${escapeHTML(episodeFormatted)}</span>
+              </div>
+
+              <!-- Judul Utama -->
+              <h3 class="font-bold text-slate-900 group-hover:text-brand-secondary transition-colors line-clamp-1 text-base mb-1" title="${safeTitle}">
+                ${safeTitle}
+              </h3>
+
+              <!-- Judul Kanji (Jika Ada) -->
+              ${
+                safeJapanese
+                  ? `<p class="text-[11px] font-medium text-slate-400 line-clamp-1 mb-2">${safeJapanese}</p>`
+                  : ""
+              }
+
+              <!-- Sinopsis -->
+              <p class="text-xs text-slate-600 leading-relaxed grow line-clamp-3 mb-4">
+                ${safeSynopsis}
               </p>
-              <p><span class="font-medium text-slate-800">Perusahaan:</span> ${safeCompany}</p>
-              <p><span class="font-medium text-slate-800">Kota:</span> ${safeCity}</p>
-              <p><span class="font-medium text-slate-800">Telepon:</span> <span class="font-mono text-[11px]">${safePhone}</span></p>
             </div>
           </div>
 
-          <!-- Tautan Eksternal Website -->
-          <div class="mt-4 pt-3 border-t border-slate-100 flex justify-end">
-            ${
-              safeWebsite
-                ? `<a 
-                    href="https://${safeWebsite}" 
-                    target="_blank" 
-                    rel="noopener noreferrer" 
-                    class="text-xs font-semibold text-brand-secondary hover:underline inline-flex items-center gap-1"
-                  >
-                    <span>${safeWebsite}</span>
-                    <span aria-hidden="true">&rarr;</span>
-                  </a>`
-                : `<span class="text-xs text-slate-400">-</span>`
-            }
+          <!-- Footer Kartu: Link Informasi Detail -->
+          <div class="px-5 pb-4 pt-2 border-t border-slate-100 flex items-center justify-between text-xs">
+            <a 
+              href="https://kitsu.io/anime/${escapeHTML(slug || id)}" 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              class="text-brand-secondary font-semibold hover:underline inline-flex items-center gap-1"
+            >
+              <span>Kitsu Info</span>
+              <span aria-hidden="true">&rarr;</span>
+            </a>
+            <span class="text-[11px] font-mono text-slate-400">ID: ${escapeHTML(id)}</span>
           </div>
         </article>
       `;
@@ -156,51 +195,55 @@ const renderUsers = (users) => {
 };
 
 /**
- * Mengambil data dari REST API publik (JSONPlaceholder) menggunakan Fetch API (Bab 9).
- * Menangani mode demonstrasi kegagalan lewat parameter URL '?fail=1'.
+ * Mengambil data anime dari public REST API Kitsu menggunakan Fetch API method GET (Bab 9).
+ * Menangani loading state, error handling, dan mode demonstrasi kegagalan lewat URL '?fail=1'.
  */
-const getUsers = async () => {
-  // Evaluasi mode fail untuk kemudahan demo pengujian error tanpa mematikan internet
+const getAnimeData = async () => {
+  // Evaluasi mode fail untuk pengujian visual penanganan error
   const urlParams = new URLSearchParams(window.location.search);
   const isFailMode = urlParams.get("fail") === "1";
   const apiEndpoint = isFailMode
-    ? "https://jsonplaceholder.typicode.com/invalid-endpoint-404"
-    : "https://jsonplaceholder.typicode.com/users";
+    ? "https://kitsu.io/api/edge/invalid-endpoint-404"
+    : "https://kitsu.io/api/edge/anime?page[limit]=12&sort=popularityRank";
 
   try {
-    // 1. Tampilkan state loading (teks + skeleton cards) dan reset state error
+    // 1. Tampilkan state loading (spinner + skeleton loader) dan reset state error
     if (loadingContainer) loadingContainer.classList.remove("hidden");
-    if (loadingMessage) loadingMessage.textContent = "Mengambil data pengguna dari REST API...";
+    if (loadingMessage) loadingMessage.textContent = "Mengambil katalog anime populer dari Kitsu REST API...";
     if (errorContainer) errorContainer.classList.add("hidden");
     if (userList) userList.innerHTML = "";
 
     // 2. Kirim permintaan HTTP GET via Fetch API (Bab 9.1 & 9.2)
-    const response = await fetch(apiEndpoint);
+    const response = await fetch(apiEndpoint, {
+      headers: {
+        Accept: "application/vnd.api+json",
+      },
+    });
 
-    // 3. Pengecekan manual response.ok sesuai Bab 9.3 Gambar 9.7
+    // 3. Pengecekan manual response.ok sesuai materi Bab 9.3 Gambar 9.7
     if (!response.ok) {
       throw new Error(`Data gagal dimuat dari server (HTTP status: ${response.status})`);
     }
 
-    // 4. Konversi response stream menjadi data JavaScript Array of Objects (Bab 8.3)
-    const users = await response.json();
-    usersData = users;
+    // 4. Konversi response JSON (Bab 8.3)
+    const payload = await response.json();
+    animeData = Array.isArray(payload.data) ? payload.data : [];
 
-    // 5. Render data pengguna ke dalam kartu-kartu visual
-    renderUsers(usersData);
+    // 5. Render data anime ke dalam kartu visual
+    renderAnimeCards(animeData);
 
-    // Sembunyikan container loading setelah data siap
+    // Sembunyikan container loading setelah data berhasil diproses
     if (loadingContainer) loadingContainer.classList.add("hidden");
   } catch (error) {
     // 6. Tangani kegagalan jaringan atau HTTP error (Bab 9.3)
-    console.error("Gagal melakukan fetch data:", error);
+    console.error("Gagal melakukan fetch data anime:", error);
 
     if (loadingContainer) loadingContainer.classList.add("hidden");
     if (errorMessage) {
       errorMessage.textContent = `${error.message}. Periksa koneksi internet atau parameter endpoint lalu coba kembali.`;
     }
     if (errorContainer) errorContainer.classList.remove("hidden");
-    if (userCountBadge) userCountBadge.textContent = "0 pengguna";
+    if (userCountBadge) userCountBadge.textContent = "0 anime";
   }
 };
 
@@ -208,33 +251,34 @@ const getUsers = async () => {
 // EVENT LISTENERS
 // ========================================================
 
-// Event 'input' untuk Unified Real-time Search berdasarkan nama atau email (Bab 4.2 & Bab 6)
+// Event 'input' untuk Real-Time Search berdasarkan judul anime (Bab 4.2 & Bab 6)
 if (searchInput) {
   searchInput.addEventListener("input", () => {
     const keyword = searchInput.value.toLowerCase().trim();
     // Menggunakan Array Method filter() sesuai Bab 4.2 Tabel 4.1
-    const filteredUsers = usersData.filter((user) => {
-      const matchName = user.name && user.name.toLowerCase().includes(keyword);
-      const matchEmail = user.email && user.email.toLowerCase().includes(keyword);
-      const matchUsername = user.username && user.username.toLowerCase().includes(keyword);
-      return matchName || matchEmail || matchUsername;
+    const filteredAnime = animeData.filter((item) => {
+      const canonical = item.attributes?.canonicalTitle?.toLowerCase() || "";
+      const ja = item.attributes?.titles?.ja_jp?.toLowerCase() || "";
+      const en = item.attributes?.titles?.en?.toLowerCase() || "";
+      const syn = item.attributes?.synopsis?.toLowerCase() || "";
+      return canonical.includes(keyword) || ja.includes(keyword) || en.includes(keyword) || syn.includes(keyword);
     });
-    renderUsers(filteredUsers);
+    renderAnimeCards(filteredAnime);
   });
 }
 
 // Tombol coba lagi (Retry) jika terjadi error state
 if (retryBtn) {
   retryBtn.addEventListener("click", () => {
-    // Jika sedang dalam simulasi parameter URL ?fail=1, bersihkan query agar retry memulihkan data normal
+    // Bersihkan query string ?fail=1 agar retry langsung memulihkan data normal
     if (window.location.search.includes("fail=1")) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-    getUsers();
+    getAnimeData();
   });
 }
 
 // Jalankan pengambilan data pertama kali saat DOM siap
 document.addEventListener("DOMContentLoaded", () => {
-  getUsers();
+  getAnimeData();
 });

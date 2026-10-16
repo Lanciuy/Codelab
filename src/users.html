@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Public API - Data Pengguna | Codelab Modul 2</title>
+  <title>Public API - Eksplorasi Anime | Codelab Modul 2</title>
   <link href="./output.css" rel="stylesheet" />
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased min-h-screen flex flex-col">
@@ -49,7 +49,7 @@
     </nav>
   </header>
 
-  <!-- MAIN CONTENT (Codelab Modul 2 Bagian B) -->
+  <!-- MAIN CONTENT (Codelab Modul 2 Bagian B: Public API Anime) -->
   <main class="grow max-w-7xl w-full mx-auto px-6 py-10 md:py-14">
     
     <!-- HEADER SECTION -->
@@ -59,16 +59,18 @@
           <span>Modul 2 · Fetch API</span>
           <span>&bull;</span>
           <code class="bg-blue-100 text-blue-900 px-1.5 py-0.5 rounded text-[11px] font-mono">Method GET</code>
+          <span>&bull;</span>
+          <span class="bg-purple-100 text-purple-900 px-1.5 py-0.5 rounded text-[11px] font-medium">Anime Hub</span>
         </div>
         <h1 class="text-2xl md:text-3xl font-bold text-brand-primary">
-          Data Pengguna REST API
+          Katalog Anime REST API
         </h1>
         <p class="text-slate-600 text-sm mt-1">
-          Data diambil menggunakan Fetch API dari endpoint publik <code class="bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded text-xs font-mono">jsonplaceholder.typicode.com/users</code>.
+          Data diambil menggunakan Fetch API dari public REST API Kitsu (<code class="bg-slate-200 text-slate-800 px-1.5 py-0.5 rounded text-xs font-mono">kitsu.io/api/edge/anime</code>).
         </p>
       </div>
 
-      <!-- Badge Jumlah User & Shortcut Uji Error -->
+      <!-- Badge Jumlah Data & Shortcut Uji Error -->
       <div class="flex items-center gap-3">
         <span id="user-count-badge" class="text-xs font-semibold px-3 py-1.5 rounded-full bg-white border border-slate-200 text-slate-700 shadow-sm">
           Memuat...
@@ -86,12 +88,12 @@
     <!-- SEARCH & FILTER TOOLBAR (Bab 9.1 Gambar 9.2: id="search-input") -->
     <div class="max-w-md mb-8">
       <label for="search-input" class="block text-xs font-semibold text-slate-600 uppercase tracking-wider mb-2">
-        Pencarian Real-Time
+        Pencarian Anime Real-Time
       </label>
       <input 
         id="search-input" 
         type="search" 
-        placeholder="Cari user berdasarkan nama, email, atau username..." 
+        placeholder="Cari judul anime (contoh: Attack on Titan, Naruto, One Piece)..." 
         class="w-full bg-white border border-slate-300 p-2.5 rounded-lg text-sm text-slate-800 placeholder:text-slate-400 focus:outline-none focus:ring-2 focus:ring-brand-secondary transition duration-150 shadow-sm"
         autocomplete="off"
       />

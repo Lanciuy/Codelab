@@ -1,0 +1,116 @@
+{
+  "info": {
+    "name": "Codelab Anime API (Kitsu)",
+    "description": "Koleksi pengujian endpoint Public REST API Anime Kitsu untuk Codelab Modul 2 Praktikum Pemrograman Web.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "GET Popular Anime Catalog (Digunakan di users.html)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/anime?page[limit]=12&sort=popularityRank",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "anime"],
+          "query": [
+            { "key": "page[limit]", "value": "12" },
+            { "key": "sort", "value": "popularityRank" }
+          ]
+        },
+        "description": "Mengambil daftar anime terpopuler untuk dirender menjadi kartu visual di users.html."
+      }
+    },
+    {
+      "name": "GET Single Anime Detail by ID",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/anime/1",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "anime", "1"]
+        },
+        "description": "Mengambil data detail tunggal anime (Cowboy Bebop) berdasarkan ID."
+      }
+    },
+    {
+      "name": "GET Search Anime by Title",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/anime?filter[text]=naruto&page[limit]=5",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "anime"],
+          "query": [
+            { "key": "filter[text]", "value": "naruto" },
+            { "key": "page[limit]", "value": "5" }
+          ]
+        },
+        "description": "Pencarian anime secara dinamis berdasarkan kata kunci judul."
+      }
+    },
+    {
+      "name": "GET Trending Anime",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/trending/anime",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "trending", "anime"]
+        },
+        "description": "Mengambil serial anime yang sedang trending."
+      }
+    },
+    {
+      "name": "GET Anime Categories",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/categories?page[limit]=5",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "categories"],
+          "query": [
+            { "key": "page[limit]", "value": "5" }
+          ]
+        },
+        "description": "Mengambil kategori/genre anime publik."
+      }
+    },
+    {
+      "name": "GET Error Handling 404 (Uji Penanganan Error)",
+      "request": {
+        "method": "GET",
+        "header": [
+          { "key": "Accept", "value": "application/vnd.api+json" }
+        ],
+        "url": {
+          "raw": "https://kitsu.io/api/edge/invalid-endpoint-404",
+          "protocol": "https",
+          "host": ["kitsu", "io"],
+          "path": ["api", "edge", "invalid-endpoint-404"]
+        },
+        "description": "Uji penanganan status HTTP 404 Not Found sesuai Bab 9.3."
+      }
+    }
+  ]
+}
